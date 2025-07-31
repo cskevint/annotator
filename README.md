@@ -12,9 +12,24 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Interactive Annotation**: Click and drag to create circular annotations with dynamic radius
 - **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, and pan annotations
 - **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
+- **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+- **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
-- **Smart Canvas Resizing**: Dynamic resizing on image selection and zoom operations with aspect ratio awareness
-- **Independent Scrolling**: Image list container scrolls separately from main application interface
+## Keyboard Shortcuts
+
+- **Spacebar + Drag**: Temporary panning in any mode (works like Photoshop/design tools)
+- **Ctrl/Cmd + Drag**: Alternative temporary panning method (also works in any mode)
+
+## Advanced Features
+
+- **Multi-Format Support**: Upload PNG, JPG, GIF, WebP images or PDF files
+- **PDF Processing**: Automatically converts PDF pages to high-resolution images (300 DPI)
+- **Smart Canvas Resizing**: Maximizes workspace by using all available screen space
+- **Performance Optimized**: Fast rendering with requestAnimationFrame and optimized PDF loading
+- **Export/Import**: Save and load annotation data as JSON files
+- **Real-time Feedback**: Live zoom percentage display and responsive UI updates
+- **Independent Scrolling**: Image list scrolls separately from the main workspace
+- **Memory Efficient**: Optimized image handling for large PDFs and multiple images
 - **Labeling System**: Add custom labels to each annotation with real-time editing
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
 - **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing
@@ -65,16 +80,16 @@ npm run dev
    - **Select**: Use "Select" mode to choose annotations
    - **Move**: Use "Move" mode to drag annotations to new positions
    - **Resize**: Use "Resize" mode to adjust annotation size by dragging the edge
-   - **Pan**: Use "Pan" mode to navigate around the image (or hold Ctrl/Cmd + drag)
+   - **Pan**: Use "Pan" mode to navigate around the image (or hold spacebar + drag for temporary panning)
    - **Delete**: Select an annotation and click the delete button in the toolbar
    - **Label**: Add descriptive labels to annotations using the label input
 
 5. **Navigate & Zoom**:
+   - **Auto-Fit**: Images automatically fit to screen when first selected for optimal viewing
    - **Zoom In/Out**: Use zoom controls to get closer or farther from the image
    - **Fit to Screen**: Automatically fit the entire image in the viewport
    - **Actual Size**: View image at 100% (1:1 pixel ratio)
-   - **Pan Navigation**: Drag the image around when zoomed in using Pan mode
-   - **Auto-Fit**: Images automatically fit to screen when first selected
+   - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (works like Photoshop)
    - **Smart Resize**: Canvas automatically resizes to use full available space on zoom operations
 
 6. **Export Data**: Click "Export" in the toolbar to download a JSON file with all annotation data

@@ -47,14 +47,11 @@ export default function Home() {
   const handleImageSelect = useCallback((index: number) => {
     setCurrentImageIndex(index);
     setSelectedAnnotationId(null);
-    // Reset zoom when image changes
-    setViewState({
-      zoom: 1,
-      panX: 0,
-      panY: 0
+    // Don't reset zoom here - let AnnotationCanvas handle fit-to-screen
+    // The resizeTrigger will cause the canvas to auto-fit the new image
+    requestAnimationFrame(() => {
+      setResizeTrigger(prev => prev + 1);
     });
-    // Trigger canvas resize
-    setResizeTrigger(prev => prev + 1);
   }, []);
 
   // Handle annotations change

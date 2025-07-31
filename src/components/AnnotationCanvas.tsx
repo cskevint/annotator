@@ -26,6 +26,7 @@ export default function AnnotationCanvas({
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number } | null>(null);
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number } | null>(null);
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
 
   // Draw the canvas with image and annotations
   const draw = useCallback(() => {
@@ -142,10 +143,11 @@ export default function AnnotationCanvas({
       canvas.style.width = `${canvasWidth}px`;
       canvas.style.height = `${canvasHeight}px`;
       
-      // Redraw without calling draw() to avoid circular dependency
-      requestAnimationFrame(() => {
-        draw();
-      });
+      // Immediate redraw for faster response
+      draw();
+    } else {
+      // If dimensions haven't changed, just redraw
+      draw();
     }
   }, [draw]);
 
@@ -156,10 +158,14 @@ export default function AnnotationCanvas({
     if (!image) return;
 
     const handleImageLoad = () => {
-      resizeCanvas();
+      // Use requestAnimationFrame for faster rendering
+      requestAnimationFrame(() => {
+        resizeCanvas();
+      });
     };
 
-    if (image.complete) {
+    // For blob URLs (like PDF images), images are typically already cached
+    if (image.complete && image.naturalWidth > 0) {
       handleImageLoad();
     } else {
       image.addEventListener('load', handleImageLoad);
@@ -172,29 +178,43 @@ export default function AnnotationCanvas({
     const image = imageRef.current;
     const canvas = canvasRef.current;
     
-    if (!image || !canvas || !image.complete) return;
+    if (!image || !canvas || !imageUrl) return;
 
-    // Only auto-fit when image URL changes (not on every resize)
-    if (image.naturalWidth > 0 && image.naturalHeight > 0) {
-      const fitZoom = calculateFitToScreenZoom(
-        image.naturalWidth,
-        image.naturalHeight,
-        canvas.width,
-        canvas.height
-      );
-      const centerPan = calculateCenterPan(
-        image.naturalWidth,
-        image.naturalHeight,
-        canvas.width,
-        canvas.height,
-        fitZoom
-      );
-      
-      onViewStateChange({
-        zoom: fitZoom,
-        panX: centerPan.x,
-        panY: centerPan.y
-      });
+    // Always auto-fit when image URL changes, regardless of load state
+    const applyFitToScreen = () => {
+      if (image.naturalWidth > 0 && image.naturalHeight > 0 && canvas.width > 0 && canvas.height > 0) {
+        const fitZoom = calculateFitToScreenZoom(
+          image.naturalWidth,
+          image.naturalHeight,
+          canvas.width,
+          canvas.height
+        );
+        const centerPan = calculateCenterPan(
+          image.naturalWidth,
+          image.naturalHeight,
+          canvas.width,
+          canvas.height,
+          fitZoom
+        );
+        
+        onViewStateChange({
+          zoom: fitZoom,
+          panX: centerPan.x,
+          panY: centerPan.y
+        });
+      }
+    };
+
+    // Try to apply fit immediately if image is ready
+    if (image.complete && image.naturalWidth > 0) {
+      requestAnimationFrame(applyFitToScreen);
+    } else {
+      // Wait for image to load
+      const handleLoad = () => {
+        requestAnimationFrame(applyFitToScreen);
+      };
+      image.addEventListener('load', handleLoad);
+      return () => image.removeEventListener('load', handleLoad);
     }
   }, [imageUrl, onViewStateChange]);
 
@@ -243,11 +263,40 @@ export default function AnnotationCanvas({
   // Resize canvas when resizeTrigger changes
   useEffect(() => {
     if (resizeTrigger !== undefined) {
-      requestAnimationFrame(() => {
-        resizeCanvas();
-      });
+      // Immediate resize for faster response when switching images
+      resizeCanvas();
     }
   }, [resizeTrigger, resizeCanvas]);
+
+  // Handle spacebar key press for temporary panning
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && !e.repeat) {
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setIsSpacePressed(false);
+        // End panning if we were panning with space
+        if (isPanning) {
+          setIsPanning(false);
+          setPanStart(null);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isPanning]);
 
   // Get mouse position relative to canvas with zoom/pan adjustments
   const getMousePos = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -279,8 +328,8 @@ export default function AnnotationCanvas({
     const pos = getMousePos(e);
     const selectedAnnotation = annotations.find(a => a.id === selectedAnnotationId);
 
-    // Handle panning mode or Space key + mouse for any mode
-    if (mode === 'pan' || e.ctrlKey || e.metaKey) {
+    // Handle panning mode or Spacebar + mouse for any mode
+    if (mode === 'pan' || isSpacePressed) {
       setIsPanning(true);
       setPanStart({ x: pos.canvasX, y: pos.canvasY });
       return;
@@ -396,7 +445,7 @@ export default function AnnotationCanvas({
     // Update cursor based on mode and hover state
     const canvas = canvasRef.current;
     if (canvas) {
-      if (mode === 'pan' || isPanning) {
+      if (mode === 'pan' || isPanning || isSpacePressed) {
         canvas.style.cursor = isPanning ? 'grabbing' : 'grab';
       } else if (selectedAnnotation) {
         if (mode === 'move' && isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {

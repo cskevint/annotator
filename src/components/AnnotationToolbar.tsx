@@ -161,7 +161,7 @@ export default function AnnotationToolbar({
         {/* Annotation Count */}
         <div className="flex items-center ml-auto">
           <span className="text-sm text-gray-500">
-            {annotationCount} annotation{annotationCount !== 1 ? 's' : ''}
+            {annotationCount} total annotation{annotationCount !== 1 ? 's' : ''}
           </span>
         </div>
       </div>
