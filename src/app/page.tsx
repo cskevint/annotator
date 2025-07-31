@@ -5,7 +5,6 @@ import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import AnnotationControls from '@/components/AnnotationControls';
 import { Annotation, ImageAnnotation, DrawingMode, AnnotationData } from '@/types/annotation';
-import { generateId } from '@/lib/utils';
 
 export default function Home() {
   const [images, setImages] = useState<File[]>([]);

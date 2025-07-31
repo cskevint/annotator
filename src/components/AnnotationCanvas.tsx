@@ -293,6 +293,7 @@ export default function AnnotationCanvas({
 
   return (
     <div className="relative">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imageRef}
         src={imageUrl}
