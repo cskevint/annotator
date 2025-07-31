@@ -2,6 +2,9 @@
 
 A modern web application built with Next.js 14 for annotating images with circular annotations. Create precise annotations with labels and export your work as JSON data.
 
+🔗 **Live Demo:** https://annotator-kohl.vercel.app/  
+📚 **Repository:** https://github.com/cskevint/annotator
+
 ## Features
 
 - **Multi-Image Upload**: Upload and manage multiple images simultaneously
@@ -9,39 +12,32 @@ A modern web application built with Next.js 14 for annotating images with circul
 - **Annotation Management**: Select, move, resize, and delete annotations with ease
 - **Labeling System**: Add custom labels to each annotation
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
-- **Responsive Design**: Works on desktop and tablet devices
+- **Responsive Design**: Optimized for desktop and tablet devices
+- **Full Viewport Layout**: Utilizes entire screen width for maximum workspace
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ 
-- npm, yarn, pnpm, or bun
+- npm
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/cskevint/annotator.git
 cd annotator
 ```
 
 2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
 ```
 
 3. Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
@@ -55,7 +51,7 @@ pnpm dev
 2. **Select Image**: Click on an uploaded image to begin annotation
 
 3. **Create Annotations**: 
-   - Select "Draw" mode
+   - Select "Draw" mode in the toolbar
    - Click and drag on the image to create circular annotations
    - The radius expands as you move away from the initial click point
 
@@ -63,12 +59,19 @@ pnpm dev
    - **Select**: Use "Select" mode to choose annotations
    - **Move**: Use "Move" mode to drag annotations to new positions
    - **Resize**: Use "Resize" mode to adjust annotation size by dragging the edge
-   - **Delete**: Select an annotation and click the delete button
-   - **Label**: Add descriptive labels to annotations in the controls panel
+   - **Delete**: Select an annotation and click the delete button in the toolbar
+   - **Label**: Add descriptive labels to annotations using the label input
 
-5. **Export Data**: Click "Export Annotations" to download a JSON file with all annotation data
+5. **Export Data**: Click "Export" in the toolbar to download a JSON file with all annotation data
 
-6. **Import Data**: Use "Import Annotations" to load previously saved annotation sessions
+6. **Import Data**: Use "Import" to load previously saved annotation sessions
+
+### Interface Layout
+
+- **Horizontal Toolbar**: All annotation tools in a single row for easy access
+- **Compact Sidebar**: Image upload and management (12.5% width)
+- **Large Canvas Area**: Main annotation workspace (87.5% width)
+- **Full Viewport**: Utilizes entire browser width for maximum space
 
 ### Data Format
 
@@ -109,22 +112,31 @@ src/
 │   ├── layout.tsx
 │   └── page.tsx
 ├── components/
-│   ├── AnnotationCanvas.tsx    # Canvas-based annotation interface
-│   ├── AnnotationControls.tsx  # Tool panel and controls
-│   └── ImageUploader.tsx       # Image upload and management
+│   ├── AnnotationCanvas.tsx     # Canvas-based annotation interface
+│   ├── AnnotationToolbar.tsx    # Horizontal toolbar with all controls
+│   └── ImageUploader.tsx        # Image upload and management
 ├── lib/
-│   └── utils.ts               # Utility functions
+│   └── utils.ts                # Utility functions
 └── types/
-    └── annotation.ts          # TypeScript type definitions
+    └── annotation.ts           # TypeScript type definitions
 ```
 
 ## Development
 
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+```
+
 ### Key Components
 
 - **AnnotationCanvas**: Handles all canvas drawing, mouse interactions, and annotation rendering
-- **AnnotationControls**: Provides mode switching, annotation editing, and data management
-- **ImageUploader**: Manages file upload, image selection, and file display
+- **AnnotationToolbar**: Provides mode switching, annotation editing, and data management in a horizontal layout
+- **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout
 
 ### Drawing Modes
 
@@ -136,10 +148,12 @@ src/
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Test thoroughly
-5. Submit a pull request
+5. Commit your changes (`git commit -m 'Add some amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
 ## License
 
@@ -147,4 +161,13 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Support
 
-For questions or issues, please create an issue in the repository.
+For questions or issues, please create an issue in the [GitHub repository](https://github.com/cskevint/annotator/issues).
+
+## Roadmap
+
+- [ ] Undo/Redo functionality
+- [ ] Keyboard shortcuts
+- [ ] Batch annotation operations
+- [ ] Additional annotation shapes (rectangles, polygons)
+- [ ] Export formats (COCO, YOLO)
+- [ ] Zoom and pan controls for large images
