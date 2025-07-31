@@ -15,6 +15,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+
 ## Keyboard Shortcuts
 
 - **Spacebar + Drag**: Temporary panning in any mode (works like Photoshop/design tools)
@@ -34,7 +35,6 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
 - **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing
 - **Full Viewport Layout**: Utilizes entire screen width for maximum workspace efficiency
-- **Performance Optimized**: Smooth rendering with debounced resize events, requestAnimationFrame, and optimized canvas operations
 
 ## Getting Started
 
