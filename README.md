@@ -1,19 +1,23 @@
 # Image Annotation Tool
 
-A modern web application built with Next.js 14 for annotating images with circular annotations. Create precise annotations with labels and export your work as JSON data.
+A modern, production-ready web application built with Next.js 14 for annotating images with circular annotations. Create precise annotations with labels and export your work as JSON data.
 
 🔗 **Live Demo:** https://annotator-kohl.vercel.app/  
 📚 **Repository:** https://github.com/cskevint/annotator
 
 ## Features
 
-- **Multi-Image Upload**: Upload and manage multiple images simultaneously
+- **Multi-Image Upload**: Upload and manage multiple images simultaneously with drag-and-drop support
 - **Interactive Annotation**: Click and drag to create circular annotations with dynamic radius
-- **Annotation Management**: Select, move, resize, and delete annotations with ease
-- **Labeling System**: Add custom labels to each annotation
+- **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, and pan annotations
+- **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
+- **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+- **Smart Canvas Resizing**: Dynamic resizing on image selection and zoom operations with aspect ratio awareness
+- **Labeling System**: Add custom labels to each annotation with real-time editing
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
-- **Responsive Design**: Optimized for desktop and tablet devices
-- **Full Viewport Layout**: Utilizes entire screen width for maximum workspace
+- **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing
+- **Full Viewport Layout**: Utilizes entire screen width for maximum workspace efficiency
+- **Performance Optimized**: Smooth rendering with debounced resize events, requestAnimationFrame, and optimized canvas operations
 
 ## Getting Started
 
@@ -59,19 +63,34 @@ npm run dev
    - **Select**: Use "Select" mode to choose annotations
    - **Move**: Use "Move" mode to drag annotations to new positions
    - **Resize**: Use "Resize" mode to adjust annotation size by dragging the edge
+   - **Pan**: Use "Pan" mode to navigate around the image (or hold Ctrl/Cmd + drag)
    - **Delete**: Select an annotation and click the delete button in the toolbar
    - **Label**: Add descriptive labels to annotations using the label input
 
-5. **Export Data**: Click "Export" in the toolbar to download a JSON file with all annotation data
+5. **Navigate & Zoom**:
+   - **Zoom In/Out**: Use zoom controls to get closer or farther from the image
+   - **Fit to Screen**: Automatically fit the entire image in the viewport
+   - **Actual Size**: View image at 100% (1:1 pixel ratio)
+   - **Pan Navigation**: Drag the image around when zoomed in using Pan mode
+   - **Auto-Fit**: Images automatically fit to screen when first selected
+   - **Smart Resize**: Canvas automatically resizes to use full available space on zoom operations
 
-6. **Import Data**: Use "Import" to load previously saved annotation sessions
+6. **Export Data**: Click "Export" in the toolbar to download a JSON file with all annotation data
+
+7. **Import Data**: Use "Import" to load previously saved annotation sessions
 
 ### Interface Layout
 
-- **Horizontal Toolbar**: All annotation tools in a single row for easy access
+- **Horizontal Toolbar**: All annotation and navigation tools in a single row for easy access
+  - **Drawing Modes**: Draw, Select, Move, Resize, Pan (5 total modes)
+  - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size with percentage display
+  - **Annotation Management**: Label editing, delete, export/import functions
 - **Compact Sidebar**: Image upload and management (12.5% width)
-- **Large Canvas Area**: Main annotation workspace (87.5% width)
-- **Full Viewport**: Utilizes entire browser width for maximum space
+- **Dynamic Canvas Area**: Main annotation workspace (87.5% width) with maximum space utilization
+  - **Full Space Usage**: Canvas automatically uses all available width and height
+  - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations
+  - **Real-time Resize**: Canvas adjusts on window resize with optimal performance
+- **Full Viewport**: Utilizes entire browser width for maximum workspace efficiency
 
 ### Data Format
 
@@ -134,16 +153,32 @@ npm run lint         # Run ESLint
 
 ### Key Components
 
-- **AnnotationCanvas**: Handles all canvas drawing, mouse interactions, and annotation rendering
-- **AnnotationToolbar**: Provides mode switching, annotation editing, and data management in a horizontal layout
+- **AnnotationCanvas**: Handles all canvas drawing, mouse interactions, zoom/pan transformations, and dynamic full-space resizing
+  - Canvas-based rendering with zoom and pan support
+  - Maximum space utilization with automatic resize triggers
+  - Performance-optimized with requestAnimationFrame and debounced resize events
+- **AnnotationToolbar**: Provides mode switching, zoom controls, annotation editing, and data management
+  - Five drawing modes with visual feedback
+  - Comprehensive zoom controls with percentage display
+  - Integrated annotation management tools
 - **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout
 
-### Drawing Modes
+### Drawing & Navigation Modes
 
 - **Draw**: Create new circular annotations by clicking and dragging
-- **Select**: Click on annotations to select them
+- **Select**: Click on annotations to select them for editing
 - **Move**: Drag selected annotations to reposition them
 - **Resize**: Drag the edge of selected annotations to resize
+- **Pan**: Navigate around the image (especially useful when zoomed in)
+
+### Zoom & Navigation Features
+
+- **Zoom In/Out**: Step zoom with 1.5x increments (10% - 500% range)
+- **Fit to Screen**: Automatically calculate optimal zoom to fit entire image
+- **Actual Size**: Reset to 100% zoom (1:1 pixel ratio)
+- **Pan Navigation**: Smooth panning with grab/grabbing cursor feedback
+- **Auto-Fit**: Images automatically fit to screen when first loaded
+- **Keyboard Shortcuts**: Ctrl/Cmd + drag for temporary panning in any mode
 
 ## Contributing
 
@@ -165,9 +200,21 @@ For questions or issues, please create an issue in the [GitHub repository](https
 
 ## Roadmap
 
-- [ ] Undo/Redo functionality
-- [ ] Keyboard shortcuts
-- [ ] Batch annotation operations
-- [ ] Additional annotation shapes (rectangles, polygons)
-- [ ] Export formats (COCO, YOLO)
-- [ ] Zoom and pan controls for large images
+### ✅ Recently Completed
+- [x] **Full canvas space utilization** - Canvas uses all available width and height for maximum workspace
+- [x] **Auto-resize triggers** - Canvas automatically resizes on image selection and zoom operations
+- [x] **Zoom and pan controls** - Full zoom in/out, fit-to-screen, actual size with percentage display
+- [x] **Dynamic canvas resizing** - Smart responsive canvas with optimal space usage
+- [x] **Pan navigation mode** - Dedicated pan mode with keyboard shortcuts
+- [x] **Performance optimization** - Debounced resize events and smooth rendering
+- [x] **Production build optimization** - Zero warnings, clean TypeScript, optimized bundle
+
+### 🚧 Future Enhancements
+- [ ] **Undo/Redo functionality** - Step-by-step annotation history
+- [ ] **Keyboard shortcuts** - Hotkeys for mode switching and common actions
+- [ ] **Batch annotation operations** - Multi-select and bulk editing
+- [ ] **Additional annotation shapes** - Rectangles, polygons, freehand drawing
+- [ ] **Export formats** - COCO, YOLO, Pascal VOC compatibility
+- [ ] **Advanced zoom features** - Mouse wheel zoom, zoom to selection
+- [ ] **Annotation templates** - Predefined label sets and quick tools
+- [ ] **Collaborative editing** - Real-time multi-user annotation sessions

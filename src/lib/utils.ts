@@ -47,3 +47,35 @@ export function formatFileSize(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
+
+// Zoom utility functions
+export function calculateFitToScreenZoom(
+  imageWidth: number,
+  imageHeight: number,
+  canvasWidth: number,
+  canvasHeight: number
+): number {
+  const scaleX = canvasWidth / imageWidth;
+  const scaleY = canvasHeight / imageHeight;
+  return Math.min(scaleX, scaleY, 1); // Don't zoom beyond 100%
+}
+
+export function calculateCenterPan(
+  imageWidth: number,
+  imageHeight: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  zoom: number
+): { x: number; y: number } {
+  const scaledImageWidth = imageWidth * zoom;
+  const scaledImageHeight = imageHeight * zoom;
+  
+  return {
+    x: (canvasWidth - scaledImageWidth) / 2,
+    y: (canvasHeight - scaledImageHeight) / 2
+  };
+}
+
+export function clampZoom(zoom: number, minZoom: number = 0.1, maxZoom: number = 5): number {
+  return Math.max(minZoom, Math.min(maxZoom, zoom));
+}

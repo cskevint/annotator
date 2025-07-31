@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { MousePointer, Move, RotateCcw, Trash2, Download, Upload } from 'lucide-react';
-import { Annotation, DrawingMode } from '@/types/annotation';
+import { MousePointer, Move, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Hand } from 'lucide-react';
+import { Annotation, DrawingMode, ZoomMode } from '@/types/annotation';
 
 interface AnnotationToolbarProps {
   mode: DrawingMode;
@@ -13,6 +13,8 @@ interface AnnotationToolbarProps {
   onExport: () => void;
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
   annotationCount: number;
+  onZoomAction: (action: ZoomMode) => void;
+  currentZoom: number;
 }
 
 export default function AnnotationToolbar({
@@ -23,13 +25,16 @@ export default function AnnotationToolbar({
   onAnnotationLabelChange,
   onExport,
   onImport,
-  annotationCount
+  annotationCount,
+  onZoomAction,
+  currentZoom
 }: AnnotationToolbarProps) {
   const modes = [
     { id: 'draw' as DrawingMode, label: 'Draw', icon: RotateCcw },
     { id: 'select' as DrawingMode, label: 'Select', icon: MousePointer },
     { id: 'move' as DrawingMode, label: 'Move', icon: Move },
-    { id: 'resize' as DrawingMode, label: 'Resize', icon: RotateCcw }
+    { id: 'resize' as DrawingMode, label: 'Resize', icon: RotateCcw },
+    { id: 'pan' as DrawingMode, label: 'Pan', icon: Hand }
   ];
 
   return (
@@ -57,6 +62,48 @@ export default function AnnotationToolbar({
               );
             })}
           </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-6 w-px bg-gray-300 hidden md:block" />
+
+        {/* Zoom Controls */}
+        <div className="flex items-center space-x-1">
+          <button
+            onClick={() => onZoomAction('zoom-in')}
+            className="flex items-center space-x-1 px-2 py-2 bg-gray-50 text-gray-700 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
+            title="Zoom In"
+          >
+            <ZoomIn className="h-4 w-4" />
+          </button>
+          
+          <button
+            onClick={() => onZoomAction('zoom-out')}
+            className="flex items-center space-x-1 px-2 py-2 bg-gray-50 text-gray-700 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
+            title="Zoom Out"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </button>
+          
+          <button
+            onClick={() => onZoomAction('fit-screen')}
+            className="flex items-center space-x-1 px-2 py-2 bg-gray-50 text-gray-700 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
+            title="Fit to Screen"
+          >
+            <Maximize className="h-4 w-4" />
+          </button>
+          
+          <button
+            onClick={() => onZoomAction('actual-size')}
+            className="flex items-center space-x-1 px-2 py-2 bg-gray-50 text-gray-700 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors"
+            title="Actual Size (100%)"
+          >
+            <RotateCw className="h-4 w-4" />
+          </button>
+          
+          <span className="text-xs text-gray-500 ml-2">
+            {Math.round(currentZoom * 100)}%
+          </span>
         </div>
 
         {/* Divider */}

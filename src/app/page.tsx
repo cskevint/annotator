@@ -4,7 +4,8 @@ import React, { useState, useCallback, useMemo } from 'react';
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import AnnotationToolbar from '@/components/AnnotationToolbar';
-import { Annotation, ImageAnnotation, DrawingMode, AnnotationData } from '@/types/annotation';
+import { Annotation, ImageAnnotation, DrawingMode, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
+import { calculateFitToScreenZoom, calculateCenterPan, clampZoom } from '@/lib/utils';
 
 export default function Home() {
   const [images, setImages] = useState<File[]>([]);
@@ -12,6 +13,12 @@ export default function Home() {
   const [annotationData, setAnnotationData] = useState<AnnotationData>([]);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
   const [mode, setMode] = useState<DrawingMode>('draw');
+  const [viewState, setViewState] = useState<CanvasViewState>({
+    zoom: 1,
+    panX: 0,
+    panY: 0
+  });
+  const [resizeTrigger, setResizeTrigger] = useState<number>(0);
 
   // Get current image URL
   const currentImageUrl = useMemo(() => {
@@ -40,6 +47,14 @@ export default function Home() {
   const handleImageSelect = useCallback((index: number) => {
     setCurrentImageIndex(index);
     setSelectedAnnotationId(null);
+    // Reset zoom when image changes
+    setViewState({
+      zoom: 1,
+      panX: 0,
+      panY: 0
+    });
+    // Trigger canvas resize
+    setResizeTrigger(prev => prev + 1);
   }, []);
 
   // Handle annotations change
@@ -87,6 +102,53 @@ export default function Home() {
       setSelectedAnnotationId(null);
     }
   }, [selectedAnnotationId, currentAnnotations, handleAnnotationsChange]);
+
+  // Handle zoom actions
+  const handleZoomAction = useCallback((action: ZoomMode) => {
+    const image = document.querySelector('img[src="' + currentImageUrl + '"]') as HTMLImageElement;
+    if (!image || !image.complete) return;
+
+    const canvas = document.querySelector('canvas');
+    if (!canvas) return;
+
+    const containerWidth = canvas.clientWidth;
+    const containerHeight = canvas.clientHeight;
+    const imageWidth = image.naturalWidth;
+    const imageHeight = image.naturalHeight;
+
+    let newZoom = viewState.zoom;
+    let newPanX = viewState.panX;
+    let newPanY = viewState.panY;
+
+    switch (action) {
+      case 'zoom-in':
+        newZoom = clampZoom(viewState.zoom * 1.5);
+        break;
+      case 'zoom-out':
+        newZoom = clampZoom(viewState.zoom / 1.5);
+        break;
+      case 'fit-screen':
+        newZoom = calculateFitToScreenZoom(imageWidth, imageHeight, containerWidth, containerHeight);
+        const centerPan = calculateCenterPan(imageWidth, imageHeight, containerWidth, containerHeight, newZoom);
+        newPanX = centerPan.x;
+        newPanY = centerPan.y;
+        break;
+      case 'actual-size':
+        newZoom = 1;
+        const actualCenterPan = calculateCenterPan(imageWidth, imageHeight, containerWidth, containerHeight, 1);
+        newPanX = actualCenterPan.x;
+        newPanY = actualCenterPan.y;
+        break;
+    }
+
+    setViewState({
+      zoom: newZoom,
+      panX: newPanX,
+      panY: newPanY
+    });
+    // Trigger canvas resize after zoom change
+    setResizeTrigger(prev => prev + 1);
+  }, [viewState, currentImageUrl]);
 
   // Handle export
   const handleExport = useCallback(() => {
@@ -141,6 +203,8 @@ export default function Home() {
           onExport={handleExport}
           onImport={handleImport}
           annotationCount={totalAnnotations}
+          onZoomAction={handleZoomAction}
+          currentZoom={viewState.zoom}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
@@ -166,7 +230,7 @@ export default function Home() {
                     {currentAnnotations.length} annotation{currentAnnotations.length !== 1 ? 's' : ''}
                   </span>
                 </div>
-                <div className="flex justify-center">
+                <div className="relative w-full flex justify-center" style={{ height: 'calc(100vh - 220px)' }}>
                   <AnnotationCanvas
                     imageUrl={currentImageUrl}
                     annotations={currentAnnotations}
@@ -174,6 +238,9 @@ export default function Home() {
                     selectedAnnotationId={selectedAnnotationId}
                     onAnnotationSelect={setSelectedAnnotationId}
                     mode={mode}
+                    viewState={viewState}
+                    onViewStateChange={setViewState}
+                    resizeTrigger={resizeTrigger}
                   />
                 </div>
               </div>
