@@ -10,30 +10,35 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 - **Styling**: Tailwind CSS
 - **UI Components**: Radix UI primitives (Dialog, Select, Label, Separator, Toast)
 - **Icons**: Lucide React
+- **Canvas**: HTML5 Canvas for annotation rendering
+- **PDF Processing**: PDF.js for converting PDF pages to 300 DPI images
 - **Purpose**: Web application for annotating images with circular annotations
 
 ## Key Features
 1. **Multi-Image Upload**: Support for multiple web-compatible image formats (PNG, JPG, GIF, WebP)
-2. **Interactive Circle Annotations**: Click-and-drag to create circles with dynamic radius
-3. **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, pan, and delete annotations
-4. **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
-5. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
-6. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
-7. **Pan Navigation**: Dedicated pan mode with keyboard shortcuts (Ctrl/Cmd + drag)
-8. **Labeling System**: Add custom labels to each annotation with real-time editing
-9. **Data Export/Import**: Export annotations as JSON and import previous sessions
-10. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-11. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, production-ready build
+2. **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
+3. **Interactive Circle Annotations**: Click-and-drag to create circles with dynamic radius
+4. **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, pan, and delete annotations
+5. **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
+6. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+7. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
+8. **Independent Scrolling Interface**: Image list container scrolls separately from main application
+9. **Pan Navigation**: Dedicated pan mode with keyboard shortcuts (Ctrl/Cmd + drag)
+10. **Labeling System**: Add custom labels to each annotation with real-time editing
+11. **Data Export/Import**: Export annotations as JSON and import previous sessions
+12. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+13. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
   - Drawing modes, zoom controls, annotation management, data import/export
 - **8-Column Grid Layout**: Responsive grid using full viewport width
-- **Compact Sidebar**: Image upload and management (1 column on large screens)
+- **Compact Sidebar**: Image upload and management (1 column on large screens) with support for images and PDF files
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
   - Maximum space utilization using all available width and height
   - Automatic resize triggers on image selection and zoom operations
   - Real-time responsiveness to window resize
+  - Independent scrolling for image list container
 - **Canvas-Based Drawing**: HTML5 Canvas with zoom/pan transformations and precise interaction
 
 ## Drawing & Navigation Modes
@@ -150,3 +155,5 @@ When suggesting code, prioritize:
 - Circular dependency prevention in useEffect hooks
 - Canvas workspace maximization for optimal annotation efficiency
 - Proper resizeTrigger implementation for dynamic canvas sizing
+- Independent scrolling containers with fixed heights and overflow handling
+- Local asset management for PDF.js worker files to avoid CDN dependencies

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
-import { formatFileSize } from '@/lib/utils';
+import React, { useCallback, useState } from 'react';
+import { Upload, X, Image as ImageIcon, FileText, Loader2 } from 'lucide-react';
+import { formatFileSize, convertPdfToImages } from '@/lib/utils';
 
 interface ImageUploaderProps {
   images: File[];
@@ -17,13 +17,39 @@ export default function ImageUploader({
   currentImageIndex,
   onImageSelect
 }: ImageUploaderProps) {
+  const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+
+  const processFiles = useCallback(async (files: File[]) => {
+    const imageFiles: File[] = [];
+    
+    for (const file of files) {
+      if (file.type === 'application/pdf') {
+        setIsProcessingPdf(true);
+        try {
+          const convertedImages = await convertPdfToImages(file);
+          imageFiles.push(...convertedImages);
+        } catch (error) {
+          console.error('Error processing PDF:', error);
+          alert(`Error processing PDF "${file.name}": ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        setIsProcessingPdf(false);
+      } else if (file.type.startsWith('image/')) {
+        imageFiles.push(file);
+      }
+    }
+    
+    if (imageFiles.length > 0) {
+      onImagesChange([...images, ...imageFiles]);
+    }
+  }, [images, onImagesChange]);
+
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files).filter(file =>
-      file.type.startsWith('image/')
+      file.type.startsWith('image/') || file.type === 'application/pdf'
     );
-    onImagesChange([...images, ...files]);
-  }, [images, onImagesChange]);
+    processFiles(files);
+  }, [processFiles]);
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -31,11 +57,11 @@ export default function ImageUploader({
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []).filter(file =>
-      file.type.startsWith('image/')
+      file.type.startsWith('image/') || file.type === 'application/pdf'
     );
-    onImagesChange([...images, ...files]);
+    processFiles(files);
     e.target.value = ''; // Reset input
-  }, [images, onImagesChange]);
+  }, [processFiles]);
 
   const removeImage = useCallback((index: number) => {
     const newImages = images.filter((_, i) => i !== index);
@@ -52,44 +78,64 @@ export default function ImageUploader({
   }, [images, onImagesChange, currentImageIndex, onImageSelect]);
 
   return (
-    <div className="space-y-4">
+    <div className="h-full flex flex-col space-y-4">
       {/* Upload Area */}
       <div
-        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors"
+        className={`border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors flex-shrink-0 ${
+          isProcessingPdf ? 'opacity-50 pointer-events-none' : ''
+        }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-        <p className="text-sm font-medium text-gray-700 mb-1">
-          Drop images here or click to upload
-        </p>
-        <p className="text-xs text-gray-500 mb-3">
-          Supports PNG, JPG, GIF, WebP
-        </p>
+        {isProcessingPdf ? (
+          <>
+            <Loader2 className="mx-auto h-8 w-8 text-blue-500 mb-2 animate-spin" />
+            <p className="text-sm font-medium text-gray-700 mb-1">
+              Converting PDF to images...
+            </p>
+            <p className="text-xs text-gray-500">
+              This may take a few moments
+            </p>
+          </>
+        ) : (
+          <>
+            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+            <p className="text-sm font-medium text-gray-700 mb-1">
+              Drop images or PDF files here or click to upload
+            </p>
+            <p className="text-xs text-gray-500 mb-3">
+              Supports PNG, JPG, GIF, WebP, and PDF files
+            </p>
+          </>
+        )}
         <input
           type="file"
           multiple
-          accept="image/*"
+          accept="image/*,application/pdf"
           onChange={handleFileInput}
           className="hidden"
           id="image-upload"
+          disabled={isProcessingPdf}
         />
-        <label
-          htmlFor="image-upload"
-          className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
-        >
-          Choose Files
-        </label>
+        {!isProcessingPdf && (
+          <label
+            htmlFor="image-upload"
+            className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+          >
+            Choose Files
+          </label>
+        )}
       </div>
 
       {/* Image List */}
       {images.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-900">
+        <div className="flex flex-col min-h-0 flex-1">
+          <h3 className="text-sm font-medium text-gray-900 mb-2 flex-shrink-0">
             Images ({images.length})
           </h3>
-          <div className="grid grid-cols-1 gap-2">
-            {images.map((image, index) => (
+          <div className="overflow-y-auto flex-1 pr-2 space-y-2">
+            <div className="grid grid-cols-1 gap-2">
+              {images.map((image, index) => (
               <div
                 key={`${image.name}-${index}`}
                 className={`relative group border rounded-lg p-2 cursor-pointer transition-all ${
@@ -101,7 +147,11 @@ export default function ImageUploader({
               >
                 <div className="flex items-center space-x-2">
                   <div className="flex-shrink-0">
-                    <ImageIcon className="h-6 w-6 text-gray-400" />
+                    {image.name.includes('_page_') ? (
+                      <FileText className="h-6 w-6 text-blue-500" />
+                    ) : (
+                      <ImageIcon className="h-6 w-6 text-gray-400" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-gray-900 truncate">
@@ -109,6 +159,7 @@ export default function ImageUploader({
                     </p>
                     <p className="text-xs text-gray-500">
                       {formatFileSize(image.size)}
+                      {image.name.includes('_page_') && ' (from PDF)'}
                     </p>
                   </div>
                 </div>
@@ -126,6 +177,7 @@ export default function ImageUploader({
                 )}
               </div>
             ))}
+            </div>
           </div>
         </div>
       )}

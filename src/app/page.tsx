@@ -207,9 +207,9 @@ export default function Home() {
           currentZoom={viewState.zoom}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4" style={{ height: 'calc(100vh - 160px)' }}>
           {/* Left Panel - Image Upload */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 h-full overflow-y-auto">
             <ImageUploader
               images={images}
               onImagesChange={setImages}

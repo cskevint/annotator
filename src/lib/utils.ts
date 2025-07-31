@@ -79,3 +79,132 @@ export function calculateCenterPan(
 export function clampZoom(zoom: number, minZoom: number = 0.1, maxZoom: number = 5): number {
   return Math.max(minZoom, Math.min(maxZoom, zoom));
 }
+
+// Convert PDF pages to image files
+export async function convertPdfToImages(file: File): Promise<File[]> {
+  try {
+    // Dynamic import to avoid SSR issues
+    const pdfjsLib = await import('pdfjs-dist');
+    
+    // Set up worker path for Next.js - use local worker first
+    if (typeof window !== 'undefined') {
+      // Try different worker sources in order of preference
+      const workerSources = [
+        '/pdf.worker.min.js', // Local worker file
+        `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`,
+        `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
+      ];
+      
+      // Use the first available worker source
+      pdfjsLib.GlobalWorkerOptions.workerSrc = workerSources[0];
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    const imageFiles: File[] = [];
+    const baseName = file.name.replace(/\.pdf$/i, '');
+    
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      
+      // Calculate scale for 300 DPI
+      const scale = 300 / 72; // Convert from 72 DPI to 300 DPI
+      const scaledViewport = page.getViewport({ scale });
+      
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+      canvas.height = scaledViewport.height;
+      canvas.width = scaledViewport.width;
+      
+      // Render page to canvas
+      const renderContext = {
+        canvasContext: context,
+        viewport: scaledViewport,
+        canvas: canvas,
+      };
+      
+      await page.render(renderContext).promise;
+      
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob!);
+        }, 'image/png');
+      });
+      
+      // Create file with appropriate name
+      const fileName = `${baseName}_page_${pageNum.toString().padStart(3, '0')}.png`;
+      const imageFile = new File([blob], fileName, { type: 'image/png' });
+      imageFiles.push(imageFile);
+    }
+    
+    return imageFiles;
+  } catch (error) {
+    console.error('Error converting PDF to images:', error);
+    
+    // If worker fails, try without worker
+    if (error instanceof Error && error.message.includes('worker')) {
+      return convertPdfToImagesWithoutWorker(file);
+    }
+    
+    throw new Error('Failed to convert PDF to images. Please ensure the PDF is valid.');
+  }
+}
+
+// Fallback function that doesn't use worker
+async function convertPdfToImagesWithoutWorker(file: File): Promise<File[]> {
+  try {
+    const pdfjsLib = await import('pdfjs-dist');
+    
+    // Disable worker entirely
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    const imageFiles: File[] = [];
+    const baseName = file.name.replace(/\.pdf$/i, '');
+    
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      
+      // Calculate scale for 300 DPI
+      const scale = 300 / 72;
+      const scaledViewport = page.getViewport({ scale });
+      
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+      canvas.height = scaledViewport.height;
+      canvas.width = scaledViewport.width;
+      
+      // Render page to canvas
+      const renderContext = {
+        canvasContext: context,
+        viewport: scaledViewport,
+        canvas: canvas,
+      };
+      
+      await page.render(renderContext).promise;
+      
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob!);
+        }, 'image/png');
+      });
+      
+      // Create file with appropriate name
+      const fileName = `${baseName}_page_${pageNum.toString().padStart(3, '0')}.png`;
+      const imageFile = new File([blob], fileName, { type: 'image/png' });
+      imageFiles.push(imageFile);
+    }
+    
+    return imageFiles;
+  } catch (error) {
+    console.error('Error converting PDF to images without worker:', error);
+    throw new Error('Failed to convert PDF to images. Please try a different PDF file.');
+  }
+}

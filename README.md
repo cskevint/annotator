@@ -8,11 +8,13 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 ## Features
 
 - **Multi-Image Upload**: Upload and manage multiple images simultaneously with drag-and-drop support
+- **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
 - **Interactive Annotation**: Click and drag to create circular annotations with dynamic radius
 - **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, and pan annotations
 - **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
 - **Smart Canvas Resizing**: Dynamic resizing on image selection and zoom operations with aspect ratio awareness
+- **Independent Scrolling**: Image list container scrolls separately from main application interface
 - **Labeling System**: Add custom labels to each annotation with real-time editing
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
 - **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing
@@ -50,9 +52,9 @@ npm run dev
 
 ### Basic Workflow
 
-1. **Upload Images**: Drag and drop images or use the file picker to upload web-compatible images (PNG, JPG, GIF, WebP)
+1. **Upload Images**: Drag and drop images or PDF files, or use the file picker to upload web-compatible images (PNG, JPG, GIF, WebP) and PDF documents
 
-2. **Select Image**: Click on an uploaded image to begin annotation
+2. **Select Image**: Click on an uploaded image to begin annotation (PDF pages are automatically converted to PNG images with descriptive filenames)
 
 3. **Create Annotations**: 
    - Select "Draw" mode in the toolbar
@@ -85,7 +87,9 @@ npm run dev
   - **Drawing Modes**: Draw, Select, Move, Resize, Pan (5 total modes)
   - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size with percentage display
   - **Annotation Management**: Label editing, delete, export/import functions
-- **Compact Sidebar**: Image upload and management (12.5% width)
+- **Compact Sidebar**: Image upload and management (12.5% width) with support for images and PDF files
+  - **Independent Scrolling**: Image list scrolls separately with fixed height container
+  - **PDF Conversion**: Visual feedback during PDF-to-image conversion process
 - **Dynamic Canvas Area**: Main annotation workspace (87.5% width) with maximum space utilization
   - **Full Space Usage**: Canvas automatically uses all available width and height
   - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations
@@ -121,6 +125,7 @@ Exported JSON follows this structure:
 - **UI Components**: Radix UI primitives
 - **Icons**: Lucide React
 - **Canvas**: HTML5 Canvas for precise annotation rendering
+- **PDF Processing**: PDF.js for converting PDF pages to high-resolution images
 
 ## Project Structure
 
@@ -201,6 +206,9 @@ For questions or issues, please create an issue in the [GitHub repository](https
 ## Roadmap
 
 ### ✅ Recently Completed
+- [x] **Independent Scrolling Interface** - Image list container scrolls separately from main application
+- [x] **PDF Upload Support** - Upload PDF files with automatic conversion to 300 DPI images per page
+- [x] **Local PDF Worker Configuration** - Reliable PDF processing without external CDN dependencies
 - [x] **Full canvas space utilization** - Canvas uses all available width and height for maximum workspace
 - [x] **Auto-resize triggers** - Canvas automatically resizes on image selection and zoom operations
 - [x] **Zoom and pan controls** - Full zoom in/out, fit-to-screen, actual size with percentage display

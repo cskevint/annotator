@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "mkdir -p public && cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
@@ -19,8 +20,11 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.534.0",
     "next": "15.4.5",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.4.54",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-pdf": "^10.0.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
