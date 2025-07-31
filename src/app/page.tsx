@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
-import AnnotationControls from '@/components/AnnotationControls';
+import AnnotationToolbar from '@/components/AnnotationToolbar';
 import { Annotation, ImageAnnotation, DrawingMode, AnnotationData } from '@/types/annotation';
 
 export default function Home() {
@@ -130,17 +130,20 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Image Annotation Tool
-          </h1>
-          <p className="text-gray-600">
-            Upload images and create circular annotations with labels. Export your annotations as JSON.
-          </p>
-        </div>
+      <div className="px-4 py-4">
+        {/* Toolbar */}
+        <AnnotationToolbar
+          mode={mode}
+          onModeChange={setMode}
+          selectedAnnotation={selectedAnnotation}
+          onDeleteAnnotation={handleDeleteAnnotation}
+          onAnnotationLabelChange={handleAnnotationLabelChange}
+          onExport={handleExport}
+          onImport={handleImport}
+          annotationCount={totalAnnotations}
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
           {/* Left Panel - Image Upload */}
           <div className="lg:col-span-1">
             <ImageUploader
@@ -152,7 +155,7 @@ export default function Home() {
           </div>
 
           {/* Center Panel - Canvas */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-7">
             {currentImageUrl ? (
               <div className="bg-white border border-gray-200 rounded-lg p-4">
                 <div className="mb-4 flex items-center justify-between">
@@ -185,20 +188,6 @@ export default function Home() {
                 <p className="text-gray-500">Upload and select an image to start annotating</p>
               </div>
             )}
-          </div>
-
-          {/* Right Panel - Controls */}
-          <div className="lg:col-span-1">
-            <AnnotationControls
-              mode={mode}
-              onModeChange={setMode}
-              selectedAnnotation={selectedAnnotation}
-              onDeleteAnnotation={handleDeleteAnnotation}
-              onAnnotationLabelChange={handleAnnotationLabelChange}
-              onExport={handleExport}
-              onImport={handleImport}
-              annotationCount={totalAnnotations}
-            />
           </div>
         </div>
       </div>

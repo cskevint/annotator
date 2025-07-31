@@ -55,15 +55,15 @@ export default function ImageUploader({
     <div className="space-y-4">
       {/* Upload Area */}
       <div
-        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors"
+        className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-        <p className="text-lg font-medium text-gray-700 mb-2">
+        <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+        <p className="text-sm font-medium text-gray-700 mb-1">
           Drop images here or click to upload
         </p>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-xs text-gray-500 mb-3">
           Supports PNG, JPG, GIF, WebP
         </p>
         <input
@@ -76,7 +76,7 @@ export default function ImageUploader({
         />
         <label
           htmlFor="image-upload"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+          className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
         >
           Choose Files
         </label>
@@ -85,29 +85,29 @@ export default function ImageUploader({
       {/* Image List */}
       {images.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-lg font-medium text-gray-900">
-            Uploaded Images ({images.length})
+          <h3 className="text-sm font-medium text-gray-900">
+            Images ({images.length})
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-2">
             {images.map((image, index) => (
               <div
                 key={`${image.name}-${index}`}
-                className={`relative group border rounded-lg p-3 cursor-pointer transition-all ${
+                className={`relative group border rounded-lg p-2 cursor-pointer transition-all ${
                   currentImageIndex === index
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
                 onClick={() => onImageSelect(index)}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <div className="flex-shrink-0">
-                    <ImageIcon className="h-8 w-8 text-gray-400" />
+                    <ImageIcon className="h-6 w-6 text-gray-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-xs font-medium text-gray-900 truncate">
                       {image.name}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs text-gray-500">
                       {formatFileSize(image.size)}
                     </p>
                   </div>
@@ -117,9 +117,9 @@ export default function ImageUploader({
                     e.stopPropagation();
                     removeImage(index);
                   }}
-                  className="absolute top-2 right-2 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  className="absolute top-1 right-1 p-0.5 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3 w-3" />
                 </button>
                 {currentImageIndex === index && (
                   <div className="absolute inset-0 border-2 border-blue-500 rounded-lg pointer-events-none" />
