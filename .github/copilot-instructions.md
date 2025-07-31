@@ -1,13 +1,6 @@
-# Copilot Instructions8. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
-9. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
-10. **Independent Scrolling Interface**: Image list container scrolls separately from main application
-11. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
-12. **Enhanced Pan Controls**: Dedicated pan mode with keyboard shortcuts (spacebar + drag, Ctrl/Cmd + drag)
-13. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
-14. **Labeling System**: Add custom labels to each annotation with real-time editing
-15. **Data Export/Import**: Export annotations as JSON and import previous sessions
-16. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-17. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready buildse this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
+# Copilot Instructions
+
+<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
 This is a Next.js 14 TypeScript project for image annotation with the following key features:
 
@@ -30,11 +23,13 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 6. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
 7. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 8. **Independent Scrolling Interface**: Image list container scrolls separately from main application
-9. **Pan Navigation**: Dedicated pan mode with keyboard shortcuts (Ctrl/Cmd + drag)
-10. **Labeling System**: Add custom labels to each annotation with real-time editing
-11. **Data Export/Import**: Export annotations as JSON and import previous sessions
-12. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-13. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, production-ready build
+9. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
+10. **Enhanced Pan Controls**: Dedicated pan mode with keyboard shortcuts (spacebar + drag, Ctrl/Cmd + drag)
+11. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+12. **Labeling System**: Add custom labels to each annotation with real-time editing
+13. **Data Export/Import**: Export annotations as JSON and import previous sessions
+14. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+15. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
