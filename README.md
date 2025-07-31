@@ -19,7 +19,6 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 ## Keyboard Shortcuts
 
 - **Spacebar + Drag**: Temporary panning in any mode (works like Photoshop/design tools)
-- **Ctrl/Cmd + Drag**: Alternative temporary panning method (also works in any mode)
 
 ## Advanced Features
 
@@ -198,7 +197,7 @@ npm run lint         # Run ESLint
 - **Actual Size**: Reset to 100% zoom (1:1 pixel ratio)
 - **Pan Navigation**: Smooth panning with grab/grabbing cursor feedback
 - **Auto-Fit**: Images automatically fit to screen when first loaded
-- **Keyboard Shortcuts**: Ctrl/Cmd + drag for temporary panning in any mode
+- **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode
 
 ## Contributing
 
