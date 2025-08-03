@@ -270,7 +270,23 @@ export default function AnnotationCanvas({
 
   // Handle spacebar key press for temporary panning
   useEffect(() => {
+    // Helper function to check if user is currently typing in an input field
+    const isInputFocused = (): boolean => {
+      const activeElement = document.activeElement as HTMLElement;
+      return activeElement && (
+        activeElement.tagName === 'INPUT' || 
+        activeElement.tagName === 'TEXTAREA' || 
+        activeElement.contentEditable === 'true' ||
+        activeElement.isContentEditable
+      );
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't handle spacebar if user is typing in an input field
+      if (isInputFocused()) {
+        return;
+      }
+
       if (e.code === 'Space' && !e.repeat) {
         e.preventDefault();
         setIsSpacePressed(true);
@@ -278,6 +294,11 @@ export default function AnnotationCanvas({
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      // Don't handle spacebar if user is typing in an input field
+      if (isInputFocused()) {
+        return;
+      }
+
       if (e.code === 'Space') {
         e.preventDefault();
         setIsSpacePressed(false);
