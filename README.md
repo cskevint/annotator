@@ -12,7 +12,10 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Interactive Annotation**: Click and drag to create circular annotations with dynamic radius
 - **Simplified Annotation Management**: Two primary modes - Draw and enhanced Select with integrated move, resize, and delete
 - **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
-- **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
+- **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
+- **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
+- **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
+- **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
@@ -69,12 +72,13 @@ npm run dev
 
 1. **Upload Images**: Drag and drop images or PDF files, or use the file picker to upload web-compatible images (PNG, JPG, GIF, WebP) and PDF documents
 
-2. **Select Image**: Click on an uploaded image to begin annotation (PDF pages are automatically converted to PNG images with descriptive filenames)
+2. **Auto-Selection**: The first uploaded image is automatically selected when no images are loaded, ready for immediate annotation
 
 3. **Create Annotations**: 
    - Select "Draw" mode in the toolbar
    - Click and drag on the image to create circular annotations
    - The radius expands as you move away from the initial click point
+   - **Automatically switches to Select mode** with the new annotation selected for immediate editing
 
 4. **Manage Annotations**:
    - **Select Mode**: Click any annotation to select it, then:
@@ -88,6 +92,7 @@ npm run dev
    - **Zoom In/Out**: Use zoom controls to get closer or farther from the image
    - **Fit to Screen**: Automatically fit the entire image in the viewport
    - **Actual Size**: View image at 100% (1:1 pixel ratio)
+   - **Focus Annotation**: Intelligently zoom to optimal viewing level for the selected annotation
    - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (works like Photoshop)
    - **Smart Resize**: Canvas automatically resizes to use full available space on zoom operations
 
@@ -99,7 +104,7 @@ npm run dev
 
 - **Horizontal Toolbar**: All annotation and navigation tools in a single row for easy access
   - **Drawing Modes**: Draw and Select (2 streamlined modes with integrated functionality)
-  - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size with percentage display
+  - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size, and Focus Annotation with percentage display
   - **Data Management**: Export/import functions for annotation data
 - **Compact Sidebar**: Image upload and management (12.5% width) with support for images and PDF files
   - **Independent Scrolling**: Image list scrolls separately with fixed height container

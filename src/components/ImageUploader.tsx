@@ -39,9 +39,15 @@ export default function ImageUploader({
     }
     
     if (imageFiles.length > 0) {
-      onImagesChange([...images, ...imageFiles]);
+      const newImages = [...images, ...imageFiles];
+      onImagesChange(newImages);
+      
+      // Auto-select the first uploaded image if no image is currently selected
+      if (currentImageIndex === -1) {
+        onImageSelect(images.length); // Select the first newly uploaded image
+      }
     }
-  }, [images, onImagesChange]);
+  }, [images, onImagesChange, currentImageIndex, onImageSelect]);
 
   const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

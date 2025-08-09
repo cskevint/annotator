@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MousePointer, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw } from 'lucide-react';
+import { MousePointer, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
 import { Annotation, DrawingMode, ZoomMode } from '@/types/annotation';
 
 interface AnnotationToolbarProps {
@@ -96,6 +96,19 @@ export default function AnnotationToolbar({
             title="Actual Size (100%)"
           >
             <RotateCw className="h-4 w-4" />
+          </button>
+          
+          <button
+            onClick={() => onZoomAction('focus-annotation')}
+            disabled={!selectedAnnotation}
+            className={`flex items-center space-x-1 px-2 py-2 border border-gray-200 rounded-md text-sm font-medium transition-colors ${
+              selectedAnnotation 
+                ? 'bg-gray-50 text-gray-700 hover:bg-gray-100' 
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            }`}
+            title="Focus on Selected Annotation"
+          >
+            <Target className="h-4 w-4" />
           </button>
           
           <span className="text-xs text-gray-500 ml-2">

@@ -5,7 +5,7 @@ import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import AnnotationToolbar from '@/components/AnnotationToolbar';
 import { Annotation, ImageAnnotation, DrawingMode, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
-import { calculateFitToScreenZoom, calculateCenterPan, clampZoom } from '@/lib/utils';
+import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
 
 export default function Home() {
   const [images, setImages] = useState<File[]>([]);
@@ -136,6 +136,18 @@ export default function Home() {
         newPanX = actualCenterPan.x;
         newPanY = actualCenterPan.y;
         break;
+      case 'focus-annotation':
+        if (selectedAnnotation) {
+          const focusView = calculateAnnotationFocusView(
+            selectedAnnotation,
+            containerWidth,
+            containerHeight
+          );
+          newZoom = clampZoom(focusView.zoom);
+          newPanX = focusView.panX;
+          newPanY = focusView.panY;
+        }
+        break;
     }
 
     setViewState({
@@ -145,7 +157,7 @@ export default function Home() {
     });
     // Trigger canvas resize after zoom change
     setResizeTrigger(prev => prev + 1);
-  }, [viewState, currentImageUrl]);
+  }, [viewState, currentImageUrl, selectedAnnotation]);
 
   // Handle export
   const handleExport = useCallback(() => {
@@ -235,6 +247,7 @@ export default function Home() {
                     selectedAnnotationId={selectedAnnotationId}
                     onAnnotationSelect={setSelectedAnnotationId}
                     mode={mode}
+                    onModeChange={setMode}
                     viewState={viewState}
                     onViewStateChange={setViewState}
                     resizeTrigger={resizeTrigger}

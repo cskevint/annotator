@@ -20,16 +20,19 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 3. **Interactive Circle Annotations**: Click-and-drag to create circles with dynamic radius
 4. **Simplified Annotation Management**: Two streamlined modes - Draw and enhanced Select with integrated functionality
 5. **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
-5. **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
-6. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
-7. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
-8. **Independent Scrolling Interface**: Image list container scrolls separately from main application
-9. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
-10. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
-11. **Labeling System**: Add custom labels to each annotation with real-time editing
-12. **Data Export/Import**: Export annotations as JSON and import previous sessions
-13. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-14. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+6. **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
+7. **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
+8. **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
+9. **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
+10. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+11. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
+12. **Independent Scrolling Interface**: Image list container scrolls separately from main application
+13. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
+14. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+15. **Labeling System**: Add custom labels to each annotation with real-time editing
+16. **Data Export/Import**: Export annotations as JSON and import previous sessions
+17. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+18. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
@@ -134,6 +137,7 @@ interface AnnotationCanvasProps {
   selectedAnnotationId: string | null;
   onAnnotationSelect: (id: string | null) => void;
   mode: DrawingMode;
+  onModeChange: (mode: DrawingMode) => void;
   viewState: CanvasViewState;
   onViewStateChange: (viewState: CanvasViewState) => void;
   resizeTrigger?: number; // Increment to trigger canvas resize
@@ -141,7 +145,7 @@ interface AnnotationCanvasProps {
 
 type AnnotationData = ImageAnnotation[];
 type DrawingMode = 'draw' | 'select';
-type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size';
+type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size' | 'focus-annotation';
 ```
 
 ## Development Guidelines

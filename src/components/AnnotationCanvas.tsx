@@ -11,6 +11,7 @@ export default function AnnotationCanvas({
   selectedAnnotationId,
   onAnnotationSelect,
   mode,
+  onModeChange,
   viewState,
   onViewStateChange,
   resizeTrigger
@@ -553,6 +554,7 @@ export default function AnnotationCanvas({
         };
         onAnnotationsChange([...annotations, newAnnotation]);
         onAnnotationSelect(newAnnotation.id);
+        onModeChange('select'); // Switch to select mode after drawing
       }
     }
 

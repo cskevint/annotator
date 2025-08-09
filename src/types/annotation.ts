@@ -18,7 +18,7 @@ export type AnnotationData = ImageAnnotation[];
 export type DrawingMode = 'draw' | 'select';
 
 // Zoom modes for canvas view
-export type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size';
+export type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size' | 'focus-annotation';
 
 // Canvas interaction state
 export interface CanvasState {
@@ -43,6 +43,7 @@ export interface AnnotationCanvasProps {
   selectedAnnotationId: string | null;
   onAnnotationSelect: (id: string | null) => void;
   mode: DrawingMode;
+  onModeChange: (mode: DrawingMode) => void;
   viewState: CanvasViewState;
   onViewStateChange: (viewState: CanvasViewState) => void;
   resizeTrigger?: number; // Increment to trigger canvas resize

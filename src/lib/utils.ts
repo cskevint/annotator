@@ -108,6 +108,35 @@ export function clampZoom(zoom: number, minZoom: number = 0.1, maxZoom: number =
   return Math.max(minZoom, Math.min(maxZoom, zoom));
 }
 
+// Calculate optimal zoom and pan to focus on a specific annotation
+export function calculateAnnotationFocusView(
+  annotation: { x: number; y: number; radius: number },
+  canvasWidth: number,
+  canvasHeight: number
+): { zoom: number; panX: number; panY: number } {
+  // Calculate zoom level to show annotation with comfortable padding
+  // We want the annotation to take up about 20-30% of the smaller canvas dimension
+  const targetSize = Math.min(canvasWidth, canvasHeight) * 0.25;
+  const annotationSize = annotation.radius * 2; // diameter
+  let optimalZoom = targetSize / annotationSize;
+  
+  // Clamp zoom to reasonable bounds (minimum 1x for readability, maximum 8x for detail)
+  optimalZoom = Math.max(1, Math.min(8, optimalZoom));
+  
+  // Calculate pan to center the annotation
+  const scaledAnnotationX = annotation.x * optimalZoom;
+  const scaledAnnotationY = annotation.y * optimalZoom;
+  
+  const panX = (canvasWidth / 2) - scaledAnnotationX;
+  const panY = (canvasHeight / 2) - scaledAnnotationY;
+  
+  return {
+    zoom: optimalZoom,
+    panX,
+    panY
+  };
+}
+
 // Convert PDF pages to image files
 export async function convertPdfToImages(file: File): Promise<File[]> {
   try {
