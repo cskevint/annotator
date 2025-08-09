@@ -10,7 +10,8 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Multi-Image Upload**: Upload and manage multiple images simultaneously with drag-and-drop support
 - **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
 - **Interactive Annotation**: Click and drag to create circular annotations with dynamic radius
-- **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, and pan annotations
+- **Simplified Annotation Management**: Two primary modes - Draw and enhanced Select with integrated move, resize, and delete
+- **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
 - **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
@@ -76,12 +77,11 @@ npm run dev
    - The radius expands as you move away from the initial click point
 
 4. **Manage Annotations**:
-   - **Select**: Use "Select" mode to choose annotations
-   - **Move**: Use "Move" mode to drag annotations to new positions
-   - **Resize**: Use "Resize" mode to adjust annotation size by dragging the edge
-   - **Pan**: Use "Pan" mode to navigate around the image (or hold spacebar + drag for temporary panning)
-   - **Delete**: Select an annotation and click the delete button in the toolbar
-   - **Label**: Add descriptive labels to annotations using the label input
+   - **Select Mode**: Click any annotation to select it, then:
+     - **Delete**: Click the red X button in the top-right corner of the selected annotation
+     - **Move**: Click and drag anywhere inside the selected annotation to move it
+     - **Resize**: Click and drag the red resize handle (circle on the right edge) to adjust size
+   - **Label**: Add descriptive labels to annotations using the label input that appears when an annotation is selected
 
 5. **Navigate & Zoom**:
    - **Auto-Fit**: Images automatically fit to screen when first selected for optimal viewing
@@ -98,9 +98,9 @@ npm run dev
 ### Interface Layout
 
 - **Horizontal Toolbar**: All annotation and navigation tools in a single row for easy access
-  - **Drawing Modes**: Draw, Select, Move, Resize, Pan (5 total modes)
+  - **Drawing Modes**: Draw and Select (2 streamlined modes with integrated functionality)
   - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size with percentage display
-  - **Annotation Management**: Label editing, delete, export/import functions
+  - **Data Management**: Export/import functions for annotation data
 - **Compact Sidebar**: Image upload and management (12.5% width) with support for images and PDF files
   - **Independent Scrolling**: Image list scrolls separately with fixed height container
   - **PDF Conversion**: Visual feedback during PDF-to-image conversion process

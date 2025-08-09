@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Annotation, CanvasState, AnnotationCanvasProps } from '@/types/annotation';
-import { distance, isPointInCircle, isPointOnCircleEdge, generateId, calculateFitToScreenZoom, calculateCenterPan } from '@/lib/utils';
+import { distance, isPointInCircle, isPointOnResizeHandle, isPointOnDeleteButton, generateId, calculateFitToScreenZoom, calculateCenterPan } from '@/lib/utils';
 
 export default function AnnotationCanvas({
   imageUrl,
@@ -27,6 +27,7 @@ export default function AnnotationCanvas({
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState<{ x: number; y: number } | null>(null);
   const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [selectAction, setSelectAction] = useState<'none' | 'move' | 'resize'>('none');
 
   // Draw the canvas with image and annotations
   const draw = useCallback(() => {
@@ -75,6 +76,29 @@ export default function AnnotationCanvas({
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw delete button (X in circle) at top-right of annotation
+        const deleteX = annotation.x + annotation.radius * 0.7;
+        const deleteY = annotation.y - annotation.radius * 0.7;
+        
+        // Delete button background circle
+        ctx.beginPath();
+        ctx.arc(deleteX, deleteY, 8, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ef4444';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw X inside delete button
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(deleteX - 4, deleteY - 4);
+        ctx.lineTo(deleteX + 4, deleteY + 4);
+        ctx.moveTo(deleteX + 4, deleteY - 4);
+        ctx.lineTo(deleteX - 4, deleteY + 4);
         ctx.stroke();
       }
 
@@ -349,8 +373,8 @@ export default function AnnotationCanvas({
     const pos = getMousePos(e);
     const selectedAnnotation = annotations.find(a => a.id === selectedAnnotationId);
 
-    // Handle panning mode or Spacebar + mouse for any mode
-    if (mode === 'pan' || isSpacePressed) {
+    // Handle spacebar panning for any mode
+    if (isSpacePressed) {
       setIsPanning(true);
       setPanStart({ x: pos.canvasX, y: pos.canvasY });
       return;
@@ -363,23 +387,38 @@ export default function AnnotationCanvas({
         drawingStartPoint: pos
       });
     } else if (mode === 'select') {
-      // Find clicked annotation
-      const clickedAnnotation = annotations.find(annotation =>
-        isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
-      );
-      onAnnotationSelect(clickedAnnotation?.id || null);
-    } else if (mode === 'move' && selectedAnnotation) {
-      if (isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+      // Check if clicking on delete button of selected annotation
+      if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+        const newAnnotations = annotations.filter(a => a.id !== selectedAnnotation.id);
+        onAnnotationsChange(newAnnotations);
+        onAnnotationSelect(null);
+        return;
+      }
+
+      // Check if clicking on resize handle of selected annotation
+      if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+        setSelectAction('resize');
+        setCanvasState({ ...canvasState, isDrawing: true });
+        return;
+      }
+
+      // Check if clicking inside selected annotation for moving
+      if (selectedAnnotation && isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+        setSelectAction('move');
         setDragOffset({
           x: pos.x - selectedAnnotation.x,
           y: pos.y - selectedAnnotation.y
         });
         setCanvasState({ ...canvasState, isDrawing: true });
+        return;
       }
-    } else if (mode === 'resize' && selectedAnnotation) {
-      if (isPointOnCircleEdge(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
-        setCanvasState({ ...canvasState, isDrawing: true });
-      }
+
+      // Find clicked annotation for selection
+      const clickedAnnotation = annotations.find(annotation =>
+        isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
+      );
+      onAnnotationSelect(clickedAnnotation?.id || null);
+      setSelectAction('none');
     }
   };
 
@@ -439,42 +478,46 @@ export default function AnnotationCanvas({
           ctx.setLineDash([]);
           ctx.restore();
         }
-      } else if (mode === 'move' && selectedAnnotation && dragOffset) {
-        // Move annotation
-        const newAnnotations = annotations.map(annotation =>
-          annotation.id === selectedAnnotation.id
-            ? {
-                ...annotation,
-                x: pos.x - dragOffset.x,
-                y: pos.y - dragOffset.y
-              }
-            : annotation
-        );
-        onAnnotationsChange(newAnnotations);
-      } else if (mode === 'resize' && selectedAnnotation) {
-        // Resize annotation
-        const newRadius = distance(selectedAnnotation.x, selectedAnnotation.y, pos.x, pos.y);
-        const newAnnotations = annotations.map(annotation =>
-          annotation.id === selectedAnnotation.id
-            ? { ...annotation, radius: Math.max(10, newRadius) }
-            : annotation
-        );
-        onAnnotationsChange(newAnnotations);
+      } else if (mode === 'select' && selectedAnnotation) {
+        if (selectAction === 'move' && dragOffset) {
+          // Move annotation
+          const newAnnotations = annotations.map(annotation =>
+            annotation.id === selectedAnnotation.id
+              ? {
+                  ...annotation,
+                  x: pos.x - dragOffset.x,
+                  y: pos.y - dragOffset.y
+                }
+              : annotation
+          );
+          onAnnotationsChange(newAnnotations);
+        } else if (selectAction === 'resize') {
+          // Resize annotation
+          const newRadius = distance(selectedAnnotation.x, selectedAnnotation.y, pos.x, pos.y);
+          const newAnnotations = annotations.map(annotation =>
+            annotation.id === selectedAnnotation.id
+              ? { ...annotation, radius: Math.max(10, newRadius) }
+              : annotation
+          );
+          onAnnotationsChange(newAnnotations);
+        }
       }
     }
 
     // Update cursor based on mode and hover state
     const canvas = canvasRef.current;
     if (canvas) {
-      if (mode === 'pan' || isPanning || isSpacePressed) {
+      if (isPanning || isSpacePressed) {
         canvas.style.cursor = isPanning ? 'grabbing' : 'grab';
-      } else if (selectedAnnotation) {
-        if (mode === 'move' && isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
-          canvas.style.cursor = 'move';
-        } else if (mode === 'resize' && isPointOnCircleEdge(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+      } else if (mode === 'select' && selectedAnnotation) {
+        if (isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+          canvas.style.cursor = 'pointer';
+        } else if (isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
           canvas.style.cursor = 'nw-resize';
+        } else if (isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+          canvas.style.cursor = 'move';
         } else {
-          canvas.style.cursor = mode === 'draw' ? 'crosshair' : 'default';
+          canvas.style.cursor = 'default';
         }
       } else {
         canvas.style.cursor = mode === 'draw' ? 'crosshair' : 'default';
@@ -513,12 +556,14 @@ export default function AnnotationCanvas({
       }
     }
 
+    // Reset states
     setCanvasState({
       ...canvasState,
       isDrawing: false,
       drawingStartPoint: null
     });
     setDragOffset(null);
+    setSelectAction('none');
   };
 
   return (

@@ -15,7 +15,7 @@ export interface ImageAnnotation {
 export type AnnotationData = ImageAnnotation[];
 
 // Drawing modes for the canvas
-export type DrawingMode = 'draw' | 'select' | 'resize' | 'move' | 'pan';
+export type DrawingMode = 'draw' | 'select';
 
 // Zoom modes for canvas view
 export type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size';

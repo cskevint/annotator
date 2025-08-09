@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MousePointer, Move, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Hand } from 'lucide-react';
+import { MousePointer, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw } from 'lucide-react';
 import { Annotation, DrawingMode, ZoomMode } from '@/types/annotation';
 
 interface AnnotationToolbarProps {
@@ -31,10 +31,7 @@ export default function AnnotationToolbar({
 }: AnnotationToolbarProps) {
   const modes = [
     { id: 'draw' as DrawingMode, label: 'Draw', icon: RotateCcw },
-    { id: 'select' as DrawingMode, label: 'Select', icon: MousePointer },
-    { id: 'move' as DrawingMode, label: 'Move', icon: Move },
-    { id: 'resize' as DrawingMode, label: 'Resize', icon: RotateCcw },
-    { id: 'pan' as DrawingMode, label: 'Pan', icon: Hand }
+    { id: 'select' as DrawingMode, label: 'Select', icon: MousePointer }
   ];
 
   return (

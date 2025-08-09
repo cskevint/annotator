@@ -18,18 +18,18 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 1. **Multi-Image Upload**: Support for multiple web-compatible image formats (PNG, JPG, GIF, WebP)
 2. **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
 3. **Interactive Circle Annotations**: Click-and-drag to create circles with dynamic radius
-4. **Advanced Annotation Management**: Five distinct modes - draw, select, move, resize, pan, and delete annotations
+4. **Simplified Annotation Management**: Two streamlined modes - Draw and enhanced Select with integrated functionality
+5. **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
 5. **Comprehensive Zoom Controls**: Zoom in/out, fit-to-screen, actual size with percentage display and real-time feedback
 6. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
 7. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 8. **Independent Scrolling Interface**: Image list container scrolls separately from main application
 9. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
-10. **Enhanced Pan Controls**: Dedicated pan mode with spacebar keyboard shortcuts
-11. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
-12. **Labeling System**: Add custom labels to each annotation with real-time editing
-13. **Data Export/Import**: Export annotations as JSON and import previous sessions
-14. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-15. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+10. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+11. **Labeling System**: Add custom labels to each annotation with real-time editing
+12. **Data Export/Import**: Export annotations as JSON and import previous sessions
+13. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+14. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
@@ -45,14 +45,14 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 
 ## Drawing & Navigation Modes
 1. **Draw**: Create new circular annotations by clicking and dragging
-2. **Select**: Click on annotations to select them for editing
-3. **Move**: Drag selected annotations to reposition them
-4. **Resize**: Drag the edge of selected annotations to adjust size
-5. **Pan**: Navigate around the image (especially useful when zoomed in)
+2. **Select**: Enhanced mode with integrated functionality:
+   - Click any annotation to select it
+   - Click red X button in top-right corner to delete selected annotation
+   - Click and drag annotation body to move it
+   - Click and drag red resize handle on right edge to resize annotation
 
 ## Zoom & Navigation Features
 - **Zoom Controls**: Zoom in/out with 1.5x steps, fit-to-screen, actual size (100%)
-- **Pan Navigation**: Dedicated pan mode with grab/grabbing cursor feedback
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Keyboard Shortcuts**: Spacebar + drag for temporary panning in any mode
 - **Smart Auto-Fit**: Images automatically fit to screen when first loaded for optimal viewing
@@ -140,7 +140,7 @@ interface AnnotationCanvasProps {
 }
 
 type AnnotationData = ImageAnnotation[];
-type DrawingMode = 'draw' | 'select' | 'resize' | 'move' | 'pan';
+type DrawingMode = 'draw' | 'select';
 type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size';
 ```
 

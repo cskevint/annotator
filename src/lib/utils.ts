@@ -39,6 +39,34 @@ export function isPointOnCircleEdge(
   return Math.abs(dist - radius) <= tolerance;
 }
 
+// Check if point is on resize handle
+export function isPointOnResizeHandle(
+  pointX: number,
+  pointY: number,
+  circleX: number,
+  circleY: number,
+  radius: number,
+  tolerance: number = 8
+): boolean {
+  const handleX = circleX + radius;
+  const handleY = circleY;
+  return distance(pointX, pointY, handleX, handleY) <= tolerance;
+}
+
+// Check if point is on delete button
+export function isPointOnDeleteButton(
+  pointX: number,
+  pointY: number,
+  circleX: number,
+  circleY: number,
+  radius: number,
+  tolerance: number = 10
+): boolean {
+  const deleteX = circleX + radius * 0.7;
+  const deleteY = circleY - radius * 0.7;
+  return distance(pointX, pointY, deleteX, deleteY) <= tolerance;
+}
+
 // Format file size for display
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
