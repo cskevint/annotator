@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import { MousePointer, RotateCcw, Trash2, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
+import { MousePointer, RotateCcw, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
 import { Annotation, DrawingMode, ZoomMode } from '@/types/annotation';
 
 interface AnnotationToolbarProps {
   mode: DrawingMode;
   onModeChange: (mode: DrawingMode) => void;
   selectedAnnotation: Annotation | null;
-  onDeleteAnnotation: () => void;
   onAnnotationLabelChange: (label: string) => void;
   onExport: () => void;
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -21,7 +20,6 @@ export default function AnnotationToolbar({
   mode,
   onModeChange,
   selectedAnnotation,
-  onDeleteAnnotation,
   onAnnotationLabelChange,
   onExport,
   onImport,
@@ -132,14 +130,6 @@ export default function AnnotationToolbar({
                 className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-32"
               />
             </div>
-
-            <button
-              onClick={onDeleteAnnotation}
-              className="flex items-center space-x-1 px-3 py-2 bg-red-50 text-red-700 border border-red-200 rounded-md text-sm font-medium hover:bg-red-100 transition-colors"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Delete</span>
-            </button>
 
             <div className="h-6 w-px bg-gray-300 hidden md:block" />
           </>

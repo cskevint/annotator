@@ -89,17 +89,6 @@ export default function Home() {
     }
   }, [selectedAnnotationId, currentAnnotations, handleAnnotationsChange]);
 
-  // Handle annotation deletion
-  const handleDeleteAnnotation = useCallback(() => {
-    if (selectedAnnotationId) {
-      const newAnnotations = currentAnnotations.filter(
-        (annotation: Annotation) => annotation.id !== selectedAnnotationId
-      );
-      handleAnnotationsChange(newAnnotations);
-      setSelectedAnnotationId(null);
-    }
-  }, [selectedAnnotationId, currentAnnotations, handleAnnotationsChange]);
-
   // Handle zoom actions
   const handleZoomAction = useCallback((action: ZoomMode) => {
     const image = document.querySelector('img[src="' + currentImageUrl + '"]') as HTMLImageElement;
@@ -207,7 +196,6 @@ export default function Home() {
           mode={mode}
           onModeChange={setMode}
           selectedAnnotation={selectedAnnotation}
-          onDeleteAnnotation={handleDeleteAnnotation}
           onAnnotationLabelChange={handleAnnotationLabelChange}
           onExport={handleExport}
           onImport={handleImport}

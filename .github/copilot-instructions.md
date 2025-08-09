@@ -36,7 +36,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
-  - Drawing modes, zoom controls, annotation management, data import/export
+  - Drawing modes (Draw, Select), zoom controls (5 zoom options), data import/export
 - **8-Column Grid Layout**: Responsive grid using full viewport width
 - **Compact Sidebar**: Image upload and management (1 column on large screens) with support for images and PDF files
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
@@ -53,9 +53,10 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
    - Click red X button in top-right corner to delete selected annotation
    - Click and drag annotation body to move it
    - Click and drag red resize handle on right edge to resize annotation
+   - All annotation manipulation (delete, move, resize) happens directly on annotations, not via separate toolbar buttons
 
 ## Zoom & Navigation Features
-- **Zoom Controls**: Zoom in/out with 1.5x steps, fit-to-screen, actual size (100%)
+- **Zoom Controls**: Zoom in/out with 1.5x steps, fit-to-screen, actual size (100%), and focus-annotation for selected annotations
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Keyboard Shortcuts**: Spacebar + drag for temporary panning in any mode
 - **Smart Auto-Fit**: Images automatically fit to screen when first loaded for optimal viewing
