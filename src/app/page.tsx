@@ -108,10 +108,34 @@ export default function Home() {
 
     switch (action) {
       case 'zoom-in':
-        newZoom = clampZoom(viewState.zoom * 1.5);
+        {
+          const newZoomLevel = clampZoom(viewState.zoom * 1.5);
+          const zoomFactor = newZoomLevel / viewState.zoom;
+          
+          // Calculate the center of the canvas
+          const centerX = containerWidth / 2;
+          const centerY = containerHeight / 2;
+          
+          // Adjust pan to keep the center fixed
+          newPanX = centerX - (centerX - viewState.panX) * zoomFactor;
+          newPanY = centerY - (centerY - viewState.panY) * zoomFactor;
+          newZoom = newZoomLevel;
+        }
         break;
       case 'zoom-out':
-        newZoom = clampZoom(viewState.zoom / 1.5);
+        {
+          const newZoomLevel = clampZoom(viewState.zoom / 1.5);
+          const zoomFactor = newZoomLevel / viewState.zoom;
+          
+          // Calculate the center of the canvas
+          const centerX = containerWidth / 2;
+          const centerY = containerHeight / 2;
+          
+          // Adjust pan to keep the center fixed
+          newPanX = centerX - (centerX - viewState.panX) * zoomFactor;
+          newPanY = centerY - (centerY - viewState.panY) * zoomFactor;
+          newZoom = newZoomLevel;
+        }
         break;
       case 'fit-screen':
         newZoom = calculateFitToScreenZoom(imageWidth, imageHeight, containerWidth, containerHeight);
@@ -238,6 +262,7 @@ export default function Home() {
                     onModeChange={setMode}
                     viewState={viewState}
                     onViewStateChange={setViewState}
+                    onZoomAction={handleZoomAction}
                     resizeTrigger={resizeTrigger}
                   />
                 </div>

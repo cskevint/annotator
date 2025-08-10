@@ -46,7 +46,7 @@ export function isPointOnResizeHandle(
   circleX: number,
   circleY: number,
   radius: number,
-  tolerance: number = 8
+  tolerance: number = 14
 ): boolean {
   const handleX = circleX + radius;
   const handleY = circleY;
@@ -60,7 +60,7 @@ export function isPointOnDeleteButton(
   circleX: number,
   circleY: number,
   radius: number,
-  tolerance: number = 10
+  tolerance: number = 16
 ): boolean {
   const deleteX = circleX + radius * 0.7;
   const deleteY = circleY - radius * 0.7;

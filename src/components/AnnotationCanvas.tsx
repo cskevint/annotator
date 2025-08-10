@@ -14,6 +14,7 @@ export default function AnnotationCanvas({
   onModeChange,
   viewState,
   onViewStateChange,
+  onZoomAction,
   resizeTrigger
 }: AnnotationCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,9 +60,9 @@ export default function AnnotationCanvas({
       // Draw circle
       ctx.beginPath();
       ctx.arc(annotation.x, annotation.y, annotation.radius, 0, 2 * Math.PI);
-      ctx.strokeStyle = isSelected ? '#ef4444' : '#3b82f6';
-      ctx.lineWidth = isSelected ? 3 : 2;
-      ctx.stroke();
+    ctx.strokeStyle = isSelected ? '#ef4444' : '#3b82f6';
+    ctx.lineWidth = isSelected ? 10 : 8;
+    ctx.stroke();
 
       // Draw center dot
       ctx.beginPath();
@@ -72,35 +73,31 @@ export default function AnnotationCanvas({
       // Draw resize handle for selected annotation
       if (isSelected) {
         ctx.beginPath();
-        ctx.arc(annotation.x + annotation.radius, annotation.y, 5, 0, 2 * Math.PI);
+        ctx.arc(annotation.x + annotation.radius, annotation.y, 12, 0, 2 * Math.PI);
         ctx.fillStyle = '#ef4444';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Draw delete button (X in circle) at top-right of annotation
+        ctx.stroke();        // Draw delete button (X in circle) at top-right of annotation
         const deleteX = annotation.x + annotation.radius * 0.7;
         const deleteY = annotation.y - annotation.radius * 0.7;
         
         // Delete button background circle
         ctx.beginPath();
-        ctx.arc(deleteX, deleteY, 8, 0, 2 * Math.PI);
+        ctx.arc(deleteX, deleteY, 14, 0, 2 * Math.PI);
         ctx.fillStyle = '#ef4444';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Draw X inside delete button
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(deleteX - 4, deleteY - 4);
-        ctx.lineTo(deleteX + 4, deleteY + 4);
-        ctx.moveTo(deleteX + 4, deleteY - 4);
-        ctx.lineTo(deleteX - 4, deleteY + 4);
-        ctx.stroke();
+        ctx.stroke();        // Draw X inside delete button
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(deleteX - 8, deleteY - 8);
+  ctx.lineTo(deleteX + 8, deleteY + 8);
+  ctx.moveTo(deleteX + 8, deleteY - 8);
+  ctx.lineTo(deleteX - 8, deleteY + 8);
+  ctx.stroke();
       }
 
       // Draw label
@@ -132,11 +129,11 @@ export default function AnnotationCanvas({
         0,
         2 * Math.PI
       );
-      ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([5, 5]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 8;
+  ctx.setLineDash([10, 10]);
+  ctx.stroke();
+  ctx.setLineDash([]);
     }
 
     // Restore context
@@ -307,11 +304,26 @@ export default function AnnotationCanvas({
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't handle spacebar if user is typing in an input field
+      // Don't handle shortcuts if user is typing in an input field
       if (isInputFocused()) {
         return;
       }
 
+      // Handle zoom shortcuts
+      if ((e.metaKey || e.ctrlKey) && !e.repeat) {
+        if (e.key === '=' || e.key === '+') {
+          e.preventDefault();
+          onZoomAction('zoom-in');
+          return;
+        }
+        if (e.key === '-') {
+          e.preventDefault();
+          onZoomAction('zoom-out');
+          return;
+        }
+      }
+
+      // Handle spacebar for panning
       if (e.code === 'Space' && !e.repeat) {
         e.preventDefault();
         setIsSpacePressed(true);
@@ -342,7 +354,7 @@ export default function AnnotationCanvas({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [isPanning]);
+  }, [isPanning, onZoomAction]);
 
   // Get mouse position relative to canvas with zoom/pan adjustments
   const getMousePos = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -473,8 +485,8 @@ export default function AnnotationCanvas({
             2 * Math.PI
           );
           ctx.strokeStyle = '#10b981';
-          ctx.lineWidth = 2 / viewState.zoom;
-          ctx.setLineDash([5 / viewState.zoom, 5 / viewState.zoom]);
+          ctx.lineWidth = 8 / viewState.zoom;
+          ctx.setLineDash([10 / viewState.zoom, 10 / viewState.zoom]);
           ctx.stroke();
           ctx.setLineDash([]);
           ctx.restore();
