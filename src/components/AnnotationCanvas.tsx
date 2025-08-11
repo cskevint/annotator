@@ -124,12 +124,28 @@ export default function AnnotationCanvas({
       // Draw label
       if (annotation.label) {
         ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
-        ctx.font = '14px Inter, sans-serif';
+        
+        // Moderate zoom-responsive font size
+        const baseFontSize = 14;
+        const fontScaleFactor = 1.6 / Math.max(0.12, viewState.zoom);
+        const minFontSize = 12;
+        const maxFontSize = 72;
+        const fontSize = Math.max(minFontSize, Math.min(maxFontSize, baseFontSize * fontScaleFactor));
+        
+        ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Position label in the center of the annotation
         ctx.fillText(
           annotation.label,
-          annotation.x - annotation.radius,
-          annotation.y - annotation.radius - 10
+          annotation.x,
+          annotation.y
         );
+        
+        // Reset text alignment for other text rendering
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
       }
     });
 

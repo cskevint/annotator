@@ -17,6 +17,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
 - **Center-Fixed Zoom Controls**: Zoom in/out while maintaining canvas center point, fit-to-screen, actual size, and focus-annotation
 - **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
+- **Zoom-Responsive Labels**: Annotation labels are centered within circles and scale with zoom for optimal readability
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
