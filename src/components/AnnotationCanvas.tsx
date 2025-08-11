@@ -70,34 +70,55 @@ export default function AnnotationCanvas({
       ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
       ctx.fill();
 
-      // Draw resize handle for selected annotation
+            // Draw resize handle for selected annotation
       if (isSelected) {
+        // Inverse scaling: larger when zoomed out, smaller when zoomed in
+        const baseResizeRadius = 12;
+        const resizeScaleFactor = 1 / Math.max(0.3, viewState.zoom); // Prevent division by very small numbers
+        const minRadius = 8;
+        const maxRadius = 40;
+        const resizeRadius = Math.max(minRadius, Math.min(maxRadius, baseResizeRadius * resizeScaleFactor));
+        
         ctx.beginPath();
-        ctx.arc(annotation.x + annotation.radius, annotation.y, 12, 0, 2 * Math.PI);
+        ctx.arc(annotation.x + annotation.radius, annotation.y, resizeRadius, 0, 2 * Math.PI);
         ctx.fillStyle = '#ef4444';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = Math.max(1, 2 / Math.max(0.3, viewState.zoom)); // Inverse scaling for stroke width
         ctx.stroke();        // Draw delete button (X in circle) at top-right of annotation
         const deleteX = annotation.x + annotation.radius * 0.7;
         const deleteY = annotation.y - annotation.radius * 0.7;
         
+        // Inverse scaling: larger when zoomed out, smaller when zoomed in
+        const baseDeleteRadius = 14;
+        const deleteScaleFactor = 1 / Math.max(0.3, viewState.zoom); // Prevent division by very small numbers
+        const minDeleteRadius = 10;
+        const maxDeleteRadius = 45;
+        const deleteRadius = Math.max(minDeleteRadius, Math.min(maxDeleteRadius, baseDeleteRadius * deleteScaleFactor));
+        
+        const baseXSize = 8;
+        const minXSize = 6;
+        const maxXSize = 20;
+        const xSize = Math.max(minXSize, Math.min(maxXSize, baseXSize * deleteScaleFactor));
+        
         // Delete button background circle
         ctx.beginPath();
-        ctx.arc(deleteX, deleteY, 14, 0, 2 * Math.PI);
+        ctx.arc(deleteX, deleteY, deleteRadius, 0, 2 * Math.PI);
         ctx.fillStyle = '#ef4444';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        ctx.stroke();        // Draw X inside delete button
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(deleteX - 8, deleteY - 8);
-  ctx.lineTo(deleteX + 8, deleteY + 8);
-  ctx.moveTo(deleteX + 8, deleteY - 8);
-  ctx.lineTo(deleteX - 8, deleteY + 8);
-  ctx.stroke();
+        ctx.lineWidth = Math.max(1, 2 / Math.max(0.3, viewState.zoom)); // Inverse scaling for stroke width
+        ctx.stroke();
+
+        // Draw X inside delete button
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = Math.max(2, 3 / Math.max(0.3, viewState.zoom)); // Inverse scaling for X stroke width
+        ctx.beginPath();
+        ctx.moveTo(deleteX - xSize, deleteY - xSize);
+        ctx.lineTo(deleteX + xSize, deleteY + xSize);
+        ctx.moveTo(deleteX + xSize, deleteY - xSize);
+        ctx.lineTo(deleteX - xSize, deleteY + xSize);
+        ctx.stroke();
       }
 
       // Draw label
@@ -401,7 +422,7 @@ export default function AnnotationCanvas({
       });
     } else if (mode === 'select') {
       // Check if clicking on delete button of selected annotation
-      if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+      if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
         const newAnnotations = annotations.filter(a => a.id !== selectedAnnotation.id);
         onAnnotationsChange(newAnnotations);
         onAnnotationSelect(null);
@@ -409,7 +430,7 @@ export default function AnnotationCanvas({
       }
 
       // Check if clicking on resize handle of selected annotation
-      if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+      if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
         setSelectAction('resize');
         setCanvasState({ ...canvasState, isDrawing: true });
         return;
@@ -523,9 +544,9 @@ export default function AnnotationCanvas({
       if (isPanning || isSpacePressed) {
         canvas.style.cursor = isPanning ? 'grabbing' : 'grab';
       } else if (mode === 'select' && selectedAnnotation) {
-        if (isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+        if (isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
           canvas.style.cursor = 'pointer';
-        } else if (isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+        } else if (isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
           canvas.style.cursor = 'nw-resize';
         } else if (isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
           canvas.style.cursor = 'move';

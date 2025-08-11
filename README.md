@@ -11,11 +11,12 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
 - **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines)
 - **Simplified Annotation Management**: Two primary modes - Draw and enhanced Select with integrated move, resize, and delete
-- **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
+- **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
 - **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 - **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
 - **Center-Fixed Zoom Controls**: Zoom in/out while maintaining canvas center point, fit-to-screen, actual size, and focus-annotation
+- **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace

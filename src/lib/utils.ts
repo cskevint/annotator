@@ -46,11 +46,17 @@ export function isPointOnResizeHandle(
   circleX: number,
   circleY: number,
   radius: number,
+  zoom: number = 1,
   tolerance: number = 14
 ): boolean {
   const handleX = circleX + radius;
   const handleY = circleY;
-  return distance(pointX, pointY, handleX, handleY) <= tolerance;
+  // Inverse scaling: larger tolerance when zoomed out
+  const scaleFactor = 1 / Math.max(0.3, zoom);
+  const minTolerance = 10;
+  const maxTolerance = 50;
+  const scaledTolerance = Math.max(minTolerance, Math.min(maxTolerance, tolerance * scaleFactor));
+  return distance(pointX, pointY, handleX, handleY) <= scaledTolerance;
 }
 
 // Check if point is on delete button
@@ -60,11 +66,17 @@ export function isPointOnDeleteButton(
   circleX: number,
   circleY: number,
   radius: number,
+  zoom: number = 1,
   tolerance: number = 16
 ): boolean {
   const deleteX = circleX + radius * 0.7;
   const deleteY = circleY - radius * 0.7;
-  return distance(pointX, pointY, deleteX, deleteY) <= tolerance;
+  // Inverse scaling: larger tolerance when zoomed out
+  const scaleFactor = 1 / Math.max(0.3, zoom);
+  const minTolerance = 12;
+  const maxTolerance = 55;
+  const scaledTolerance = Math.max(minTolerance, Math.min(maxTolerance, tolerance * scaleFactor));
+  return distance(pointX, pointY, deleteX, deleteY) <= scaledTolerance;
 }
 
 // Format file size for display

@@ -31,10 +31,11 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 14. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with refined button outlines for optimal visibility
-17. **Labeling System**: Add custom labels to each annotation with real-time editing
-18. **Data Export/Import**: Export annotations as JSON and import previous sessions
-19. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-20. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
+18. **Labeling System**: Add custom labels to each annotation with real-time editing
+19. **Data Export/Import**: Export annotations as JSON and import previous sessions
+20. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+21. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
@@ -52,9 +53,9 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 1. **Draw**: Create new circular annotations by clicking and dragging
 2. **Select**: Enhanced mode with integrated functionality:
    - Click any annotation to select it
-   - Click red X button in top-right corner to delete selected annotation
+   - Click red X button in top-right corner to delete selected annotation (scales inversely with zoom for visibility)
    - Click and drag annotation body to move it
-   - Click and drag red resize handle on right edge to resize annotation
+   - Click and drag red resize handle on right edge to resize annotation (scales inversely with zoom for visibility)
    - All annotation manipulation (delete, move, resize) happens directly on annotations, not via separate toolbar buttons
 
 ## Zoom & Navigation Features
