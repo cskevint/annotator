@@ -60,14 +60,14 @@ export default function AnnotationCanvas({
       // Draw circle
       ctx.beginPath();
       ctx.arc(annotation.x, annotation.y, annotation.radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = isSelected ? '#ef4444' : '#3b82f6';
+    ctx.strokeStyle = isSelected ? '#0000FF' : '#006400';
     ctx.lineWidth = isSelected ? 10 : 8;
     ctx.stroke();
 
       // Draw center dot
       ctx.beginPath();
       ctx.arc(annotation.x, annotation.y, 3, 0, 2 * Math.PI);
-      ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
+      ctx.fillStyle = isSelected ? '#0000FF' : '#006400';
       ctx.fill();
 
             // Draw resize handle for selected annotation
@@ -81,7 +81,7 @@ export default function AnnotationCanvas({
         
         ctx.beginPath();
         ctx.arc(annotation.x + annotation.radius, annotation.y, resizeRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = '#ef4444';
+        ctx.fillStyle = '#0000FF';
         ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = Math.max(1, 2 / Math.max(0.3, viewState.zoom)); // Inverse scaling for stroke width
@@ -144,7 +144,7 @@ export default function AnnotationCanvas({
         );
         
         // Draw colored fill text on top
-        ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
+        ctx.fillStyle = isSelected ? '#0000FF' : '#006400';
         ctx.fillText(
           annotation.label,
           annotation.x,

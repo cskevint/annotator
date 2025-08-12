@@ -9,7 +9,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 
 - **Multi-Image Upload**: Upload and manage multiple images simultaneously with drag-and-drop support
 - **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
-- **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines)
+- **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines) and color-coded feedback (green unselected, blue selected)
 - **Contextual Interaction System**: Intelligent operation - click outside annotations to draw, click on annotations to select (no mode switching needed)
 - **Enhanced Selection**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
 - **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
@@ -241,5 +241,4 @@ For questions or issues, please create an issue in the [GitHub repository](https
 
 ### 🚧 Future Enhancements
 - [ ] **Undo/Redo functionality** - Step-by-step annotation history
-- [ ] **Advanced zoom features** - Mouse wheel zoom, zoom to selection
 - [ ] **Annotation templates** - Predefined label sets and quick tools
