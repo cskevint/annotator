@@ -84,7 +84,7 @@ export default function ImageUploader({
   }, [images, onImagesChange, currentImageIndex, onImageSelect]);
 
   return (
-    <div className="h-full flex flex-col space-y-4">
+    <div className="h-full flex flex-col min-h-0">
       {/* Upload Area */}
       <div
         className={`border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors flex-shrink-0 ${
@@ -133,14 +133,14 @@ export default function ImageUploader({
         )}
       </div>
 
-      {/* Image List */}
+      {/* Image List - Fixed height scrollable container */}
       {images.length > 0 && (
-        <div className="flex flex-col min-h-0 flex-1">
+        <div className="flex flex-col min-h-0 flex-1 mt-4 overflow-hidden">
           <h3 className="text-sm font-medium text-gray-900 mb-2 flex-shrink-0">
             Images ({images.length})
           </h3>
-          <div className="overflow-y-auto flex-1 pr-2 space-y-2">
-            <div className="grid grid-cols-1 gap-2">
+          <div className="overflow-y-auto bg-white border border-gray-200 rounded-lg" style={{ height: '0', flexGrow: 1 }}>
+            <div className="p-2 space-y-2">
               {images.map((image, index) => (
               <div
                 key={`${image.name}-${index}`}

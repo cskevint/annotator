@@ -25,6 +25,8 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+- **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
+- **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 
 ## Keyboard Shortcuts
 
@@ -41,12 +43,12 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Performance Optimized**: Fast rendering with requestAnimationFrame and optimized PDF loading
 - **Export/Import**: Save and load annotation data as JSON files
 - **Real-time Feedback**: Live zoom percentage display and responsive UI updates
-- **Independent Scrolling**: Image list scrolls separately from the main workspace
+- **Independent Scrolling**: Image list scrolls separately from the main workspace with explicit height constraints
 - **Memory Efficient**: Optimized image handling for large PDFs and multiple images
 - **Labeling System**: Add custom labels to each annotation with real-time editing
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
 - **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing
-- **Full Viewport Layout**: Utilizes entire screen width for maximum workspace efficiency
+- **Fixed Viewport Design**: Utilizes entire browser viewport height for maximum workspace efficiency
 
 ## Getting Started
 
@@ -113,18 +115,18 @@ npm run dev
 
 ### Interface Layout
 
-- **Vertical Sidebar**: Data management and image upload in single column for maximum canvas space
-  - **Data Management**: Import/export buttons and total annotation count at top
-  - **Image Upload**: Upload area and image list below data controls
-  - **Independent Scrolling**: Image list scrolls separately with fixed height container
+- **Fixed Viewport Sidebar**: Data management and image upload in single column with no application scrollbars
+  - **Data Management**: Import/export buttons and total annotation count at top (always visible)
+  - **Image Upload**: Upload area with drag-and-drop functionality (always visible)  
+  - **Independent Scrolling**: Image list scrolls separately with explicit height constraints and overflow handling
   - **PDF Conversion**: Visual feedback during PDF-to-image conversion process
 - **Dynamic Canvas Area**: Main annotation workspace (87.5% width) with maximum space utilization
   - **Floating Zoom Controls**: Top-right corner overlay with all zoom functions and percentage display
   - **Contextual Interaction**: Click outside annotations to draw, click on annotations to select (seamless contextual workflow)
-  - **Full Space Usage**: Canvas automatically uses all available width and height
-  - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations
-  - **Real-time Resize**: Canvas adjusts on window resize with optimal performance
-- **Full Viewport**: Utilizes entire browser width for maximum workspace efficiency
+  - **Full Space Usage**: Canvas automatically uses all available width and height with `h-full flex flex-col min-h-0` constraints
+  - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations with debounced resize events
+  - **Real-time Resize**: Canvas adjusts on window resize with optimal performance using `ResizeObserver`
+- **Fixed Viewport Design**: Uses full browser viewport height (`h-screen overflow-hidden`) for maximum workspace efficiency
 
 ### Data Format
 

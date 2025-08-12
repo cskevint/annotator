@@ -269,13 +269,13 @@ export default function Home() {
   }, [annotationData]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="px-4 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4" style={{ height: 'calc(100vh - 80px)' }}>
+    <div className="h-screen overflow-hidden bg-gray-50">
+      <div className="h-full px-4 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4 h-full" style={{ height: 'calc(100vh - 32px)' }}>
           {/* Left Panel - Data Management & Image Upload */}
           <div className="lg:col-span-1 h-full flex flex-col">
             {/* Data Management Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 space-y-3">
+            <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 space-y-3 flex-shrink-0">
               {/* Import/Export Controls */}
               <div className="flex flex-col space-y-2">
                 <button
@@ -312,8 +312,8 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Image Upload & Management */}
-            <div className="flex-1 overflow-y-auto">
+            {/* Image Upload & Management - Fixed height container with internal scrolling */}
+            <div className="flex-1 min-h-0">
               <ImageUploader
                 images={images}
                 onImagesChange={setImages}
@@ -323,11 +323,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Center Panel - Canvas */}
-          <div className="lg:col-span-7">
+          {/* Center Panel - Canvas with fixed height */}
+          <div className="lg:col-span-7 h-full flex flex-col min-h-0">
             {currentImageUrl ? (
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="mb-4 flex items-center justify-between">
+              <div className="bg-white border border-gray-200 rounded-lg p-4 flex-1 flex flex-col min-h-0">
+                <div className="mb-4 flex items-center justify-between flex-shrink-0">
                   <h2 className="text-lg font-semibold text-gray-900">
                     {images[currentImageIndex]?.name}
                   </h2>
@@ -335,7 +335,7 @@ export default function Home() {
                     {currentAnnotations.length} annotation{currentAnnotations.length !== 1 ? 's' : ''}
                   </span>
                 </div>
-                <div className="relative w-full flex justify-center" style={{ height: 'calc(100vh - 140px)' }}>
+                <div className="relative w-full flex justify-center flex-1 min-h-0">
                   {/* Zoom Controls - Top Right Corner */}
                   <div className="absolute top-4 right-4 z-10 bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
                     <div className="flex items-center space-x-1">
@@ -401,7 +401,7 @@ export default function Home() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center flex-1 flex flex-col justify-center min-h-0">
                 <div className="text-gray-400 mb-4">
                   <svg className="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />

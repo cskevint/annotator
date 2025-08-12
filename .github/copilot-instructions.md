@@ -39,21 +39,24 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 21. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
 22. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 22. **Data Export/Import**: Export annotations as JSON and import previous sessions
-23. **Full Viewport Layout**: Horizontal toolbar with streamlined controls for maximum workspace
+23. **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
 24. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
-- **Vertical Sidebar Layout**: Data management controls above image management (contextual interaction - no mode buttons)
-- **8-Column Grid Layout**: Responsive grid using full viewport width with maximum vertical space
+- **Fixed Viewport Design**: Application uses full viewport height (`h-screen overflow-hidden`) with no application-level scrollbars
+- **8-Column Grid Layout**: Responsive grid using full viewport width with precise height calculations (`calc(100vh - 32px)`)
 - **Compact Sidebar**: Data management (import/export/annotation count) and image upload in vertical stack (1 column on large screens)
+  - **Data Management Section**: Fixed height container (`flex-shrink-0`) with import/export controls always visible
+  - **Image Upload Area**: Fixed height container with drag-and-drop functionality
+  - **Image List Container**: Independent scrolling area with explicit height constraints for smooth scrolling behavior
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
-  - Maximum space utilization using all available width and height
+  - Maximum space utilization using all available width and height with `h-full flex flex-col min-h-0` constraints
   - Floating zoom controls in top-right corner of canvas with conditional focus button state
   - Contextual interaction: click and drag outside annotations to draw, click on annotations to select
-  - Automatic resize triggers on image selection and zoom operations
-  - Real-time responsiveness to window resize
-  - Independent scrolling for image list container
-- **Canvas-Based Drawing**: HTML5 Canvas with zoom/pan transformations and precise interaction
+  - Automatic resize triggers on image selection and zoom operations with `resizeTrigger` increments
+  - Real-time responsiveness to window resize with debounced `ResizeObserver` and window event handling
+  - Canvas-based drawing with precise coordinate transformations for zoom/pan operations
+- **Canvas-Based Drawing**: HTML5 Canvas with zoom/pan transformations, precise interaction, and explicit height constraints (`style={{ height: '0', flexGrow: 1 }}`) for scrollable containers
 
 ## Contextual Interaction System
 **No explicit modes** - behavior is determined by user actions:
