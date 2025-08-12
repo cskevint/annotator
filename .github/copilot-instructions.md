@@ -40,11 +40,12 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 23. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
-- **Horizontal Toolbar**: Streamlined zoom controls, data import/export (contextual interaction - no mode buttons)
-- **8-Column Grid Layout**: Responsive grid using full viewport width
-- **Compact Sidebar**: Image upload and management (1 column on large screens) with support for images and PDF files
+- **Vertical Sidebar Layout**: Data management controls above image management (contextual interaction - no mode buttons)
+- **8-Column Grid Layout**: Responsive grid using full viewport width with maximum vertical space
+- **Compact Sidebar**: Data management (import/export/annotation count) and image upload in vertical stack (1 column on large screens)
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
   - Maximum space utilization using all available width and height
+  - Floating zoom controls in top-right corner of canvas with conditional focus button state
   - Contextual interaction: click and drag outside annotations to draw, click on annotations to select
   - Automatic resize triggers on image selection and zoom operations
   - Real-time responsiveness to window resize
@@ -62,7 +63,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 3. **Smart Cursor Feedback**: Pointer cursor when hovering over annotations, crosshair for drawing areas, specific cursors for resize/move actions
 
 ## Zoom & Navigation Features
-- **Center-Fixed Zoom Controls**: Zoom in/out with 1.5x steps while maintaining canvas center point, fit-to-screen, actual size (100%), and focus-annotation for selected annotations
+- **Floating Zoom Controls**: Top-right corner overlay with compact icon-only buttons for zoom in/out, fit-to-screen, actual size (100%), and focus-annotation (disabled when no annotation selected)
+- **Center-Fixed Zoom**: Zoom in/out with 1.5x steps while maintaining canvas center point
 - **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom in/out operations across the entire application
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Smart Auto-Fit**: Images automatically fit to screen when first loaded for optimal viewing
@@ -86,11 +88,11 @@ src/
 ├── app/
 │   ├── globals.css
 │   ├── layout.tsx
-│   └── page.tsx              # Main application with state management
+│   └── page.tsx              # Main application with state management and zoom controls
 ├── components/
 │   ├── AnnotationCanvas.tsx  # Canvas-based annotation interface
-│   ├── AnnotationToolbar.tsx # Horizontal toolbar with all controls
-│   └── ImageUploader.tsx     # Compact image upload and management
+│   ├── ImageUploader.tsx     # Compact image upload and management
+│   └── LabelDialog.tsx       # Double-click label editing dialog
 ├── lib/
 │   └── utils.ts             # Utility functions and helpers
 └── types/

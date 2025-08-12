@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
+import { Upload, Download, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
-import AnnotationToolbar from '@/components/AnnotationToolbar';
 import LabelDialog from '@/components/LabelDialog';
 import { Annotation, ImageAnnotation, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
 import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
@@ -22,6 +22,7 @@ export default function Home() {
   const [resizeTrigger, setResizeTrigger] = useState<number>(0);
   const [labelDialogAnnotation, setLabelDialogAnnotation] = useState<Annotation | null>(null);
   const [labelDialogPosition, setLabelDialogPosition] = useState<{ x: number; y: number } | null>(null);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   // Get current image URL
   const currentImageUrl = useMemo(() => {
@@ -270,24 +271,56 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="px-4 py-4">
-        {/* Toolbar */}
-        <AnnotationToolbar
-          onExport={handleExport}
-          onImport={handleImport}
-          annotationCount={totalAnnotations}
-          onZoomAction={handleZoomAction}
-          currentZoom={viewState.zoom}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4" style={{ height: 'calc(100vh - 80px)' }}>
+          {/* Left Panel - Data Management & Image Upload */}
+          <div className="lg:col-span-1 h-full flex flex-col">
+            {/* Data Management Section */}
+            <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 space-y-3">
+              {/* Import/Export Controls */}
+              <div className="flex flex-col space-y-2">
+                <button
+                  onClick={() => importInputRef.current?.click()}
+                  className="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
+                >
+                  <Upload className="h-4 w-4" />
+                  <span>Import</span>
+                </button>
+                
+                <input
+                  ref={importInputRef}
+                  type="file"
+                  accept=".json"
+                  onChange={handleImport}
+                  className="hidden"
+                />
+                
+                <button
+                  onClick={handleExport}
+                  disabled={totalAnnotations === 0}
+                  className="flex items-center justify-center space-x-2 px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-md text-sm font-medium hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Export</span>
+                </button>
+              </div>
+              
+              {/* Total Annotations Count */}
+              <div className="pt-2 border-t border-gray-200">
+                <span className="text-xs text-gray-600 block text-center">
+                  {totalAnnotations} total annotation{totalAnnotations !== 1 ? 's' : ''}
+                </span>
+              </div>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4" style={{ height: 'calc(100vh - 160px)' }}>
-          {/* Left Panel - Image Upload */}
-          <div className="lg:col-span-1 h-full overflow-y-auto">
-            <ImageUploader
-              images={images}
-              onImagesChange={setImages}
-              currentImageIndex={currentImageIndex}
-              onImageSelect={handleImageSelect}
-            />
+            {/* Image Upload & Management */}
+            <div className="flex-1 overflow-y-auto">
+              <ImageUploader
+                images={images}
+                onImagesChange={setImages}
+                currentImageIndex={currentImageIndex}
+                onImageSelect={handleImageSelect}
+              />
+            </div>
           </div>
 
           {/* Center Panel - Canvas */}
@@ -302,7 +335,57 @@ export default function Home() {
                     {currentAnnotations.length} annotation{currentAnnotations.length !== 1 ? 's' : ''}
                   </span>
                 </div>
-                <div className="relative w-full flex justify-center" style={{ height: 'calc(100vh - 220px)' }}>
+                <div className="relative w-full flex justify-center" style={{ height: 'calc(100vh - 140px)' }}>
+                  {/* Zoom Controls - Top Right Corner */}
+                  <div className="absolute top-4 right-4 z-10 bg-white border border-gray-200 rounded-lg p-2 shadow-sm">
+                    <div className="flex items-center space-x-1">
+                      <button
+                        onClick={() => handleZoomAction('zoom-in')}
+                        className="p-2 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                        title="Zoom In"
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleZoomAction('zoom-out')}
+                        className="p-2 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                        title="Zoom Out"
+                      >
+                        <ZoomOut className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleZoomAction('fit-screen')}
+                        className="p-2 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                        title="Fit to Screen"
+                      >
+                        <Maximize className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleZoomAction('actual-size')}
+                        className="p-2 border border-gray-200 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors"
+                        title="Actual Size (100%)"
+                      >
+                        <RotateCw className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleZoomAction('focus-annotation')}
+                        disabled={!selectedAnnotationId}
+                        className={`p-2 border border-gray-200 rounded-md text-sm font-medium transition-colors ${
+                          selectedAnnotationId 
+                            ? 'bg-gray-50 text-gray-700 hover:bg-gray-100' 
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
+                        }`}
+                        title={selectedAnnotationId ? "Focus Annotation" : "Select an annotation to focus"}
+                      >
+                        <Target className="h-4 w-4" />
+                      </button>
+                      
+                      <span className="text-xs text-gray-500 ml-2 px-2">
+                        {Math.round(viewState.zoom * 100)}%
+                      </span>
+                    </div>
+                  </div>
+                  
                   <AnnotationCanvas
                     imageUrl={currentImageUrl}
                     annotations={currentAnnotations}

@@ -15,7 +15,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Smart Workflow**: Automatically selects newly created annotations for immediate editing
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 - **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
-- **Center-Fixed Zoom Controls**: Zoom in/out while maintaining canvas center point, fit-to-screen, actual size, and focus-annotation
+- **Floating Zoom Controls**: Top-right corner overlay with zoom in/out, fit-to-screen, actual size, and focus-annotation (disabled when no annotation selected)
 - **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
 - **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
 - **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
@@ -110,14 +110,14 @@ npm run dev
 
 ### Interface Layout
 
-- **Horizontal Toolbar**: All annotation and navigation tools in a single row for easy access
-  - **Contextual Interaction**: Click outside annotations to draw, click on annotations to select (seamless contextual workflow)
-  - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size, and Focus Annotation with percentage display
-  - **Data Management**: Export/import functions for annotation data
-- **Compact Sidebar**: Image upload and management (12.5% width) with support for images and PDF files
+- **Vertical Sidebar**: Data management and image upload in single column for maximum canvas space
+  - **Data Management**: Import/export buttons and total annotation count at top
+  - **Image Upload**: Upload area and image list below data controls
   - **Independent Scrolling**: Image list scrolls separately with fixed height container
   - **PDF Conversion**: Visual feedback during PDF-to-image conversion process
 - **Dynamic Canvas Area**: Main annotation workspace (87.5% width) with maximum space utilization
+  - **Floating Zoom Controls**: Top-right corner overlay with all zoom functions and percentage display
+  - **Contextual Interaction**: Click outside annotations to draw, click on annotations to select (seamless contextual workflow)
   - **Full Space Usage**: Canvas automatically uses all available width and height
   - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations
   - **Real-time Resize**: Canvas adjusts on window resize with optimal performance
@@ -189,11 +189,9 @@ npm run lint         # Run ESLint
   - Canvas-based rendering with zoom and pan support
   - Maximum space utilization with automatic resize triggers
   - Performance-optimized with requestAnimationFrame and debounced resize events
-- **AnnotationToolbar**: Provides zoom controls, data management, and annotation tools
-  - Contextual interaction system with cursor feedback
-  - Comprehensive zoom controls with percentage display
-  - Integrated annotation management tools
+  - Floating zoom controls overlay in top-right corner
 - **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout
+- **LabelDialog**: Context-sensitive label editing dialog with smart positioning
 
 ### Contextual Interaction System
 
