@@ -10,8 +10,6 @@ export default function AnnotationCanvas({
   onAnnotationsChange,
   selectedAnnotationId,
   onAnnotationSelect,
-  mode,
-  onModeChange,
   viewState,
   onViewStateChange,
   onZoomAction,
@@ -23,8 +21,7 @@ export default function AnnotationCanvas({
   const [canvasState, setCanvasState] = useState<CanvasState>({
     isDrawing: false,
     selectedAnnotation: null,
-    drawingStartPoint: null,
-    mode: 'draw'
+    drawingStartPoint: null
   });
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number } | null>(null);
   const [isPanning, setIsPanning] = useState(false);
@@ -161,7 +158,8 @@ export default function AnnotationCanvas({
     });
 
     // Draw current drawing circle
-    if (canvasState.isDrawing && canvasState.drawingStartPoint && mode === 'draw') {
+    // Draw current drawing annotation (if drawing)
+    if (canvasState.isDrawing && canvasState.drawingStartPoint) {
       const currentRadius = distance(
         canvasState.drawingStartPoint.x,
         canvasState.drawingStartPoint.y,
@@ -186,7 +184,7 @@ export default function AnnotationCanvas({
 
     // Restore context
     ctx.restore();
-  }, [annotations, selectedAnnotationId, canvasState, mode, viewState]);
+  }, [annotations, selectedAnnotationId, canvasState, viewState]);
 
   // Handle canvas resizing based on container and image dimensions
   const resizeCanvas = useCallback(() => {
@@ -441,56 +439,53 @@ export default function AnnotationCanvas({
       return;
     }
 
-    if (mode === 'draw') {
-      setCanvasState({
-        ...canvasState,
-        isDrawing: true,
-        drawingStartPoint: pos
-      });
-    } else if (mode === 'select') {
-      // Check if clicking on delete button of selected annotation
-      if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
-        const newAnnotations = annotations.filter(a => a.id !== selectedAnnotation.id);
-        onAnnotationsChange(newAnnotations);
-        onAnnotationSelect(null);
+    // Check if clicking on delete button of selected annotation
+    if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
+      const newAnnotations = annotations.filter(a => a.id !== selectedAnnotation.id);
+      onAnnotationsChange(newAnnotations);
+      onAnnotationSelect(null);
+      return;
+    }
+
+    // Find clicked annotation for selection
+    const clickedAnnotation = annotations.find(annotation =>
+      isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
+    );
+    
+    // Handle double-click detection FIRST (before move/resize actions)
+    if (clickedAnnotation && onAnnotationDoubleClick) {
+      const currentTime = Date.now();
+      const isDoubleClick = 
+        lastClickedAnnotation === clickedAnnotation.id && 
+        currentTime - lastClickTime < 300; // 300ms double-click threshold
+      
+      if (isDoubleClick) {
+        // Convert image coordinates to canvas coordinates for dialog positioning
+        const canvasX = (clickedAnnotation.x * viewState.zoom) + viewState.panX;
+        const canvasY = (clickedAnnotation.y * viewState.zoom) + viewState.panY;
+        onAnnotationDoubleClick(clickedAnnotation, { x: canvasX, y: canvasY });
         return;
       }
-
-      // Find clicked annotation for selection
-      const clickedAnnotation = annotations.find(annotation =>
-        isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
-      );
       
-      // Handle double-click detection FIRST (before move/resize actions)
-      if (clickedAnnotation && onAnnotationDoubleClick) {
-        const currentTime = Date.now();
-        const isDoubleClick = 
-          lastClickedAnnotation === clickedAnnotation.id && 
-          currentTime - lastClickTime < 300; // 300ms double-click threshold
-        
-        if (isDoubleClick) {
-          // Convert image coordinates to canvas coordinates for dialog positioning
-          const canvasX = (clickedAnnotation.x * viewState.zoom) + viewState.panX;
-          const canvasY = (clickedAnnotation.y * viewState.zoom) + viewState.panY;
-          onAnnotationDoubleClick(clickedAnnotation, { x: canvasX, y: canvasY });
-          return;
-        }
-        
-        setLastClickTime(currentTime);
-        setLastClickedAnnotation(clickedAnnotation.id);
-      } else {
-        setLastClickedAnnotation(null);
-      }
+      setLastClickTime(currentTime);
+      setLastClickedAnnotation(clickedAnnotation.id);
+    } else {
+      setLastClickedAnnotation(null);
+    }
 
+    // CONTEXTUAL MODE LOGIC:
+    // If clicking on an annotation, enter "select mode" behavior
+    if (clickedAnnotation) {
       // Check if clicking on resize handle of selected annotation
-      if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
+      if (selectedAnnotation && clickedAnnotation.id === selectedAnnotation.id && 
+          isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
         setSelectAction('resize');
         setCanvasState({ ...canvasState, isDrawing: true });
         return;
       }
 
       // Check if clicking inside selected annotation for moving
-      if (selectedAnnotation && isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
+      if (selectedAnnotation && clickedAnnotation.id === selectedAnnotation.id) {
         setSelectAction('move');
         setDragOffset({
           x: pos.x - selectedAnnotation.x,
@@ -500,8 +495,17 @@ export default function AnnotationCanvas({
         return;
       }
 
-      onAnnotationSelect(clickedAnnotation?.id || null);
+      // Select the clicked annotation
+      onAnnotationSelect(clickedAnnotation.id);
       setSelectAction('none');
+    } else {
+      // If clicking outside any annotation, enter "draw mode" behavior
+      onAnnotationSelect(null); // Deselect any selected annotation
+      setCanvasState({
+        ...canvasState,
+        isDrawing: true,
+        drawingStartPoint: pos
+      });
     }
   };
 
@@ -526,8 +530,8 @@ export default function AnnotationCanvas({
     }
 
     if (canvasState.isDrawing) {
-      if (mode === 'draw' && canvasState.drawingStartPoint) {
-        // Update preview circle radius
+      if (canvasState.drawingStartPoint) {
+        // Drawing mode: Update preview circle radius
         const currentRadius = distance(
           canvasState.drawingStartPoint.x,
           canvasState.drawingStartPoint.y,
@@ -561,7 +565,8 @@ export default function AnnotationCanvas({
           ctx.setLineDash([]);
           ctx.restore();
         }
-      } else if (mode === 'select' && selectedAnnotation) {
+      } else if (selectedAnnotation) {
+        // Select mode: handle move/resize actions
         if (selectAction === 'move' && dragOffset) {
           // Move annotation
           const newAnnotations = annotations.map(annotation =>
@@ -587,23 +592,33 @@ export default function AnnotationCanvas({
       }
     }
 
-    // Update cursor based on mode and hover state
+    // Update cursor based on hover state and context
     const canvas = canvasRef.current;
     if (canvas) {
       if (isPanning || isSpacePressed) {
         canvas.style.cursor = isPanning ? 'grabbing' : 'grab';
-      } else if (mode === 'select' && selectedAnnotation) {
+      } else if (selectedAnnotation) {
+        // In "select context" - show appropriate cursors for interactions
         if (isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
           canvas.style.cursor = 'pointer';
         } else if (isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
-          canvas.style.cursor = 'nw-resize';
+          canvas.style.cursor = 'nwse-resize';
         } else if (isPointInCircle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius)) {
           canvas.style.cursor = 'move';
         } else {
-          canvas.style.cursor = 'default';
+          canvas.style.cursor = 'crosshair'; // Can draw new annotations
         }
       } else {
-        canvas.style.cursor = mode === 'draw' ? 'crosshair' : 'default';
+        // No selection - check if hovering over any annotation
+        const hoveredAnnotation = annotations.find(annotation =>
+          isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
+        );
+        
+        if (hoveredAnnotation) {
+          canvas.style.cursor = 'pointer'; // Show pointer when hovering over any annotation
+        } else {
+          canvas.style.cursor = 'crosshair'; // Ready to draw new annotations
+        }
       }
     }
   };
@@ -617,7 +632,7 @@ export default function AnnotationCanvas({
       return;
     }
 
-    if (canvasState.isDrawing && mode === 'draw' && canvasState.drawingStartPoint) {
+    if (canvasState.isDrawing && canvasState.drawingStartPoint) {
       const pos = getMousePos(e);
       const radius = distance(
         canvasState.drawingStartPoint.x,
@@ -635,8 +650,7 @@ export default function AnnotationCanvas({
           label: ''
         };
         onAnnotationsChange([...annotations, newAnnotation]);
-        onAnnotationSelect(newAnnotation.id);
-        onModeChange('select'); // Switch to select mode after drawing
+        onAnnotationSelect(newAnnotation.id); // Auto-select new annotation for immediate editing
       }
     }
 

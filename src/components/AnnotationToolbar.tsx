@@ -1,12 +1,10 @@
 'use client';
 
 import React from 'react';
-import { MousePointer, RotateCcw, Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
-import { DrawingMode, ZoomMode } from '@/types/annotation';
+import { Download, Upload, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
+import { ZoomMode } from '@/types/annotation';
 
 interface AnnotationToolbarProps {
-  mode: DrawingMode;
-  onModeChange: (mode: DrawingMode) => void;
   onExport: () => void;
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
   annotationCount: number;
@@ -15,48 +13,15 @@ interface AnnotationToolbarProps {
 }
 
 export default function AnnotationToolbar({
-  mode,
-  onModeChange,
   onExport,
   onImport,
   annotationCount,
   onZoomAction,
   currentZoom
 }: AnnotationToolbarProps) {
-  const modes = [
-    { id: 'draw' as DrawingMode, label: 'Draw', icon: RotateCcw },
-    { id: 'select' as DrawingMode, label: 'Select', icon: MousePointer }
-  ];
-
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
       <div className="flex flex-wrap items-center gap-4">
-        {/* Mode Selection */}
-        <div className="flex items-center space-x-2">
-          <div className="flex space-x-1">
-            {modes.map((modeOption) => {
-              const Icon = modeOption.icon;
-              return (
-                <button
-                  key={modeOption.id}
-                  onClick={() => onModeChange(modeOption.id)}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    mode === modeOption.id
-                      ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                      : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
-                  }`}
-                  title={modeOption.label}
-                >
-                  <Icon size={16} />
-                  <span className="hidden sm:inline">{modeOption.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="h-6 w-px bg-gray-300 hidden md:block" />
-
         {/* Zoom Controls */}
         <div className="flex items-center space-x-1">
           <button

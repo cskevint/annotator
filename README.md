@@ -10,9 +10,9 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Multi-Image Upload**: Upload and manage multiple images simultaneously with drag-and-drop support
 - **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
 - **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines)
-- **Simplified Annotation Management**: Two primary modes - Draw and enhanced Select with integrated move, resize, and delete
-- **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
-- **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
+- **Contextual Interaction System**: Intelligent operation - click outside annotations to draw, click on annotations to select (no mode switching needed)
+- **Enhanced Selection**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
+- **Smart Workflow**: Automatically selects newly created annotations for immediate editing
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 - **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 - **Center-Fixed Zoom Controls**: Zoom in/out while maintaining canvas center point, fit-to-screen, actual size, and focus-annotation
@@ -81,13 +81,15 @@ npm run dev
 2. **Auto-Selection**: The first uploaded image is automatically selected when no images are loaded, ready for immediate annotation
 
 3. **Create Annotations**: 
-   - Select "Draw" mode in the toolbar
-   - Click and drag on the image to create circular annotations
-   - The radius expands as you move away from the initial click point
-   - **Automatically switches to Select mode** with the new annotation selected for immediate editing
+   - Click and drag anywhere on the image to create circular annotations
+   - The radius expands as you move away from the initial click point  
+   - **Newly created annotations are automatically selected** for immediate editing
 
 4. **Manage Annotations**:
-   - **Select Mode**: Click any annotation to select it, then:
+   - **Contextual Operation**: The interface intelligently switches between drawing and selecting based on your actions:
+     - **Click and drag outside annotations**: Creates new annotations (drawing context)
+     - **Click on existing annotations**: Selects them for editing (selection context)
+   - **Selected Annotation Actions**:
      - **Delete**: Click the red X button in the top-right corner of the selected annotation
      - **Move**: Click and drag anywhere inside the selected annotation to move it
      - **Resize**: Click and drag the red resize handle (circle on the right edge) to adjust size
@@ -109,7 +111,7 @@ npm run dev
 ### Interface Layout
 
 - **Horizontal Toolbar**: All annotation and navigation tools in a single row for easy access
-  - **Drawing Modes**: Draw and Select (2 streamlined modes with integrated functionality)
+  - **Contextual Interaction**: Click outside annotations to draw, click on annotations to select (seamless contextual workflow)
   - **Zoom Controls**: Zoom In, Zoom Out, Fit to Screen, Actual Size, and Focus Annotation with percentage display
   - **Data Management**: Export/import functions for annotation data
 - **Compact Sidebar**: Image upload and management (12.5% width) with support for images and PDF files
@@ -187,19 +189,26 @@ npm run lint         # Run ESLint
   - Canvas-based rendering with zoom and pan support
   - Maximum space utilization with automatic resize triggers
   - Performance-optimized with requestAnimationFrame and debounced resize events
-- **AnnotationToolbar**: Provides mode switching, zoom controls, annotation editing, and data management
-  - Five drawing modes with visual feedback
+- **AnnotationToolbar**: Provides zoom controls, data management, and annotation tools
+  - Contextual interaction system with cursor feedback
   - Comprehensive zoom controls with percentage display
   - Integrated annotation management tools
 - **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout
 
-### Drawing & Navigation Modes
+### Contextual Interaction System
 
-- **Draw**: Create new circular annotations by clicking and dragging
-- **Select**: Click on annotations to select them for editing
-- **Move**: Drag selected annotations to reposition them
-- **Resize**: Drag the edge of selected annotations to resize
-- **Pan**: Navigate around the image (especially useful when zoomed in)
+**No explicit modes** - behavior is determined by user actions:
+
+- **Drawing Context**: Click and drag outside annotations to create new circular annotations
+- **Selection Context**: Click on any annotation to select it, then:
+  - **Move**: Click and drag annotation body to move it
+  - **Resize**: Click and drag the red resize handle on the right edge
+  - **Delete**: Click the red X button in the top-right corner
+  - **Edit Label**: Double-click annotation to open label editing dialog
+- **Smart Cursor Feedback**: 
+  - Pointer cursor when hovering over annotations
+  - Crosshair cursor for drawing areas
+  - Specific cursors for resize/move actions
 
 ### Zoom & Navigation Features
 
@@ -208,7 +217,7 @@ npm run lint         # Run ESLint
 - **Actual Size**: Reset to 100% zoom (1:1 pixel ratio)
 - **Pan Navigation**: Smooth panning with grab/grabbing cursor feedback
 - **Auto-Fit**: Images automatically fit to screen when first loaded
-- **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode
+- **Spacebar Panning**: Hold spacebar + drag for temporary panning (works in any context)
 
 ## Contributing
 
@@ -238,13 +247,13 @@ For questions or issues, please create an issue in the [GitHub repository](https
 - [x] **Auto-resize triggers** - Canvas automatically resizes on image selection and zoom operations
 - [x] **Zoom and pan controls** - Full zoom in/out, fit-to-screen, actual size with percentage display
 - [x] **Dynamic canvas resizing** - Smart responsive canvas with optimal space usage
-- [x] **Pan navigation mode** - Dedicated pan mode with keyboard shortcuts
+- [x] **Contextual interaction system** - Intelligent behavior based on user actions (no mode switching needed)
 - [x] **Performance optimization** - Debounced resize events and smooth rendering
 - [x] **Production build optimization** - Zero warnings, clean TypeScript, optimized bundle
 
 ### 🚧 Future Enhancements
 - [ ] **Undo/Redo functionality** - Step-by-step annotation history
-- [ ] **Keyboard shortcuts** - Hotkeys for mode switching and common actions
+- [ ] **Keyboard shortcuts** - Hotkeys for common actions and navigation
 - [ ] **Batch annotation operations** - Multi-select and bulk editing
 - [ ] **Additional annotation shapes** - Rectangles, polygons, freehand drawing
 - [ ] **Export formats** - COCO, YOLO, Pascal VOC compatibility

@@ -17,10 +17,10 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 ## Key Features
 1. **Multi-Image Upload**: Support for multiple web-compatible image formats (PNG, JPG, GIF, WebP)
 2. **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
-3. **Interactive Circle Annotations**: Click-and-drag to create circles with dynamic radius and thick visual styling
-4. **Simplified Annotation Management**: Two streamlined modes - Draw and enhanced Select with integrated functionality
+3. **Interactive Circle Annotations**: Click and drag to create circles with dynamic radius and thick visual styling
+4. **Contextual Mode System**: Intelligent mode switching - click outside annotations to draw, click on annotations to select
 5. **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
-6. **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
+6. **Smart Workflow**: Automatically selects newly created annotations for immediate editing
 7. **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 8. **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 9. **Comprehensive Zoom Controls**: Center-fixed zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
@@ -36,29 +36,30 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 19. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
 20. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 21. **Data Export/Import**: Export annotations as JSON and import previous sessions
-22. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+22. **Full Viewport Layout**: Horizontal toolbar with streamlined controls for maximum workspace
 23. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
-- **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace
-  - Drawing modes (Draw, Select), zoom controls (5 zoom options), data import/export
+- **Horizontal Toolbar**: Streamlined zoom controls, data import/export (contextual interaction - no mode buttons)
 - **8-Column Grid Layout**: Responsive grid using full viewport width
 - **Compact Sidebar**: Image upload and management (1 column on large screens) with support for images and PDF files
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
   - Maximum space utilization using all available width and height
+  - Contextual interaction: click and drag outside annotations to draw, click on annotations to select
   - Automatic resize triggers on image selection and zoom operations
   - Real-time responsiveness to window resize
   - Independent scrolling for image list container
 - **Canvas-Based Drawing**: HTML5 Canvas with zoom/pan transformations and precise interaction
 
-## Drawing & Navigation Modes
-1. **Draw**: Create new circular annotations by clicking and dragging
-2. **Select**: Enhanced mode with integrated functionality:
-   - Click any annotation to select it
+## Contextual Interaction System
+**No explicit modes** - behavior is determined by user actions:
+1. **Drawing Context**: Click and drag outside annotations to create new circular annotations
+2. **Selection Context**: Click on any annotation to select it, then:
    - Click red X button in top-right corner to delete selected annotation (scales inversely with zoom for visibility)
    - Click and drag annotation body to move it
    - Click and drag red resize handle on right edge to resize annotation (scales inversely with zoom for visibility)
    - All annotation manipulation (delete, move, resize) happens directly on annotations, not via separate toolbar buttons
+3. **Smart Cursor Feedback**: Pointer cursor when hovering over annotations, crosshair for drawing areas, specific cursors for resize/move actions
 
 ## Zoom & Navigation Features
 - **Center-Fixed Zoom Controls**: Zoom in/out with 1.5x steps while maintaining canvas center point, fit-to-screen, actual size (100%), and focus-annotation for selected annotations
@@ -142,15 +143,14 @@ interface AnnotationCanvasProps {
   onAnnotationsChange: (annotations: Annotation[]) => void;
   selectedAnnotationId: string | null;
   onAnnotationSelect: (id: string | null) => void;
-  mode: DrawingMode;
-  onModeChange: (mode: DrawingMode) => void;
   viewState: CanvasViewState;
   onViewStateChange: (viewState: CanvasViewState) => void;
+  onZoomAction: (action: ZoomMode) => void;
   resizeTrigger?: number; // Increment to trigger canvas resize
+  onAnnotationDoubleClick?: (annotation: Annotation, position: { x: number; y: number }) => void;
 }
 
 type AnnotationData = ImageAnnotation[];
-type DrawingMode = 'draw' | 'select';
 type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size' | 'focus-annotation';
 ```
 

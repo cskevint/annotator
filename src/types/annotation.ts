@@ -14,9 +14,6 @@ export interface ImageAnnotation {
 
 export type AnnotationData = ImageAnnotation[];
 
-// Drawing modes for the canvas
-export type DrawingMode = 'draw' | 'select';
-
 // Zoom modes for canvas view
 export type ZoomMode = 'zoom-in' | 'zoom-out' | 'fit-screen' | 'actual-size' | 'focus-annotation';
 
@@ -25,7 +22,6 @@ export interface CanvasState {
   isDrawing: boolean;
   selectedAnnotation: string | null;
   drawingStartPoint: { x: number; y: number } | null;
-  mode: DrawingMode;
 }
 
 // Canvas zoom and pan state
@@ -42,8 +38,6 @@ export interface AnnotationCanvasProps {
   onAnnotationsChange: (annotations: Annotation[]) => void;
   selectedAnnotationId: string | null;
   onAnnotationSelect: (id: string | null) => void;
-  mode: DrawingMode;
-  onModeChange: (mode: DrawingMode) => void;
   viewState: CanvasViewState;
   onViewStateChange: (viewState: CanvasViewState) => void;
   onZoomAction: (action: ZoomMode) => void;

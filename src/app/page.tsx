@@ -5,7 +5,7 @@ import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import AnnotationToolbar from '@/components/AnnotationToolbar';
 import LabelDialog from '@/components/LabelDialog';
-import { Annotation, ImageAnnotation, DrawingMode, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
+import { Annotation, ImageAnnotation, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
 import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(-1);
   const [annotationData, setAnnotationData] = useState<AnnotationData>([]);
   const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
-  const [mode, setMode] = useState<DrawingMode>('draw');
+  // mode removed - now contextual based on user actions
   const [viewState, setViewState] = useState<CanvasViewState>({
     zoom: 1,
     panX: 0,
@@ -272,8 +272,6 @@ export default function Home() {
       <div className="px-4 py-4">
         {/* Toolbar */}
         <AnnotationToolbar
-          mode={mode}
-          onModeChange={setMode}
           onExport={handleExport}
           onImport={handleImport}
           annotationCount={totalAnnotations}
@@ -311,8 +309,6 @@ export default function Home() {
                     onAnnotationsChange={handleAnnotationsChange}
                     selectedAnnotationId={selectedAnnotationId}
                     onAnnotationSelect={setSelectedAnnotationId}
-                    mode={mode}
-                    onModeChange={setMode}
                     viewState={viewState}
                     onViewStateChange={setViewState}
                     onZoomAction={handleZoomAction}
