@@ -35,8 +35,9 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
 18. **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
 19. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
-20. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
-21. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
+20. **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options plus custom text entry
+21. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
+22. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 22. **Data Export/Import**: Export annotations as JSON and import previous sessions
 23. **Full Viewport Layout**: Horizontal toolbar with streamlined controls for maximum workspace
 24. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build

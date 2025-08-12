@@ -19,6 +19,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Floating Zoom Controls**: Top-right corner overlay with zoom in/out, fit-to-screen, actual size, and focus-annotation (disabled when no annotation selected)
 - **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
 - **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
+- **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options plus custom text entry
 - **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
 - **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
@@ -236,9 +237,3 @@ This project is open source and available under the [MIT License](LICENSE).
 ## Support
 
 For questions or issues, please create an issue in the [GitHub repository](https://github.com/cskevint/annotator/issues).
-
-## Roadmap
-
-### 🚧 Future Enhancements
-- [ ] **Undo/Redo functionality** - Step-by-step annotation history
-- [ ] **Annotation templates** - Predefined label sets and quick tools
