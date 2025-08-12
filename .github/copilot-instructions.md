@@ -24,8 +24,9 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 7. **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 8. **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 9. **Comprehensive Zoom Controls**: Center-fixed zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
-10. **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom operations and spacebar panning
-11. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+10. **Mouse Wheel Zoom**: Mouse wheel support for intuitive zoom in/out with center-fixed behavior (trackpad gestures disabled to prevent accidental zooming)
+11. **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom operations and spacebar panning
+12. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
 12. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 13. **Independent Scrolling Interface**: Image list container scrolls separately from main application
 14. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)

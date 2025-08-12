@@ -427,6 +427,38 @@ export default function AnnotationCanvas({
     };
   };
 
+  // Handle mouse wheel for zoom
+  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
+    e.preventDefault(); // Prevent page scrolling
+    
+    // Detect input device type based on delta characteristics
+    const absDelta = Math.abs(e.deltaY);
+    
+    // Mouse wheel characteristics:
+    // - Larger delta values (typically 100+ on Mac, 120 on Windows)
+    // - More discrete steps
+    // - deltaMode often 1 (line mode)
+    
+    // Trackpad characteristics:
+    // - Smaller delta values (often 1-50)
+    // - Smooth, continuous values
+    // - deltaMode often 0 (pixel mode)
+    
+    const isLikelyTrackpad = absDelta < 40 && e.deltaMode === 0;
+    
+    // Only zoom on mouse wheel, ignore trackpad gestures
+    if (!isLikelyTrackpad) {
+      // Mouse wheel: Standard zoom behavior
+      const zoomOut = e.deltaY > 0;
+      if (zoomOut) {
+        onZoomAction('zoom-out');
+      } else {
+        onZoomAction('zoom-in');
+      }
+    }
+    // Trackpad: Do nothing (no zoom), just prevent page scrolling
+  };
+
   // Handle mouse down
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const pos = getMousePos(e);
@@ -680,6 +712,7 @@ export default function AnnotationCanvas({
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onWheel={handleWheel}
         onMouseLeave={() => {
           setCanvasState({
             ...canvasState,
