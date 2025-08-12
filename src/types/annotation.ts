@@ -48,4 +48,5 @@ export interface AnnotationCanvasProps {
   onViewStateChange: (viewState: CanvasViewState) => void;
   onZoomAction: (action: ZoomMode) => void;
   resizeTrigger?: number; // Increment to trigger canvas resize
+  onAnnotationDoubleClick?: (annotation: Annotation, canvasPosition: { x: number; y: number }) => void;
 }

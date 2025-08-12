@@ -15,7 +15,8 @@ export default function AnnotationCanvas({
   viewState,
   onViewStateChange,
   onZoomAction,
-  resizeTrigger
+  resizeTrigger,
+  onAnnotationDoubleClick
 }: AnnotationCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -30,6 +31,8 @@ export default function AnnotationCanvas({
   const [panStart, setPanStart] = useState<{ x: number; y: number } | null>(null);
   const [isSpacePressed, setIsSpacePressed] = useState(false);
   const [selectAction, setSelectAction] = useState<'none' | 'move' | 'resize'>('none');
+  const [lastClickTime, setLastClickTime] = useState<number>(0);
+  const [lastClickedAnnotation, setLastClickedAnnotation] = useState<string | null>(null);
 
   // Draw the canvas with image and annotations
   const draw = useCallback(() => {
@@ -123,8 +126,6 @@ export default function AnnotationCanvas({
 
       // Draw label
       if (annotation.label) {
-        ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
-        
         // Moderate zoom-responsive font size
         const baseFontSize = 14;
         const fontScaleFactor = 1.6 / Math.max(0.12, viewState.zoom);
@@ -136,7 +137,17 @@ export default function AnnotationCanvas({
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
-        // Position label in the center of the annotation
+        // Draw white stroke first for text readability
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = Math.max(4, fontSize * 0.2); // Even thicker stroke: minimum 4px, 20% of font size
+        ctx.strokeText(
+          annotation.label,
+          annotation.x,
+          annotation.y
+        );
+        
+        // Draw colored fill text on top
+        ctx.fillStyle = isSelected ? '#ef4444' : '#3b82f6';
         ctx.fillText(
           annotation.label,
           annotation.x,
@@ -445,6 +456,32 @@ export default function AnnotationCanvas({
         return;
       }
 
+      // Find clicked annotation for selection
+      const clickedAnnotation = annotations.find(annotation =>
+        isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
+      );
+      
+      // Handle double-click detection FIRST (before move/resize actions)
+      if (clickedAnnotation && onAnnotationDoubleClick) {
+        const currentTime = Date.now();
+        const isDoubleClick = 
+          lastClickedAnnotation === clickedAnnotation.id && 
+          currentTime - lastClickTime < 300; // 300ms double-click threshold
+        
+        if (isDoubleClick) {
+          // Convert image coordinates to canvas coordinates for dialog positioning
+          const canvasX = (clickedAnnotation.x * viewState.zoom) + viewState.panX;
+          const canvasY = (clickedAnnotation.y * viewState.zoom) + viewState.panY;
+          onAnnotationDoubleClick(clickedAnnotation, { x: canvasX, y: canvasY });
+          return;
+        }
+        
+        setLastClickTime(currentTime);
+        setLastClickedAnnotation(clickedAnnotation.id);
+      } else {
+        setLastClickedAnnotation(null);
+      }
+
       // Check if clicking on resize handle of selected annotation
       if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
         setSelectAction('resize');
@@ -463,10 +500,6 @@ export default function AnnotationCanvas({
         return;
       }
 
-      // Find clicked annotation for selection
-      const clickedAnnotation = annotations.find(annotation =>
-        isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
-      );
       onAnnotationSelect(clickedAnnotation?.id || null);
       setSelectAction('none');
     }

@@ -4,6 +4,7 @@ import React, { useState, useCallback, useMemo } from 'react';
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import AnnotationToolbar from '@/components/AnnotationToolbar';
+import LabelDialog from '@/components/LabelDialog';
 import { Annotation, ImageAnnotation, DrawingMode, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
 import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
 
@@ -19,6 +20,8 @@ export default function Home() {
     panY: 0
   });
   const [resizeTrigger, setResizeTrigger] = useState<number>(0);
+  const [labelDialogAnnotation, setLabelDialogAnnotation] = useState<Annotation | null>(null);
+  const [labelDialogPosition, setLabelDialogPosition] = useState<{ x: number; y: number } | null>(null);
 
   // Get current image URL
   const currentImageUrl = useMemo(() => {
@@ -77,17 +80,69 @@ export default function Home() {
     }
   }, [annotationData, images, currentImageIndex]);
 
-  // Handle annotation label change
-  const handleAnnotationLabelChange = useCallback((label: string) => {
-    if (selectedAnnotationId) {
-      const newAnnotations = currentAnnotations.map((annotation: Annotation) =>
-        annotation.id === selectedAnnotationId
-          ? { ...annotation, label }
-          : annotation
-      );
-      handleAnnotationsChange(newAnnotations);
+  // Handle double-click on annotation to show label dialog
+  const handleAnnotationDoubleClick = useCallback((annotation: Annotation, canvasPosition: { x: number; y: number }) => {
+    // Calculate dialog position with smart placement
+    const canvas = document.querySelector('canvas');
+    if (!canvas) return;
+
+    const canvasRect = canvas.getBoundingClientRect();
+    const dialogWidth = 200;
+    const dialogHeight = 120;
+    
+    // Convert canvas coordinates to screen coordinates
+    const screenX = canvasRect.left + canvasPosition.x;
+    const screenY = canvasRect.top + canvasPosition.y;
+    
+    // Smart positioning: prefer right side, but use left if not enough space
+    let dialogX = screenX + 20; // Default to right of annotation
+    let dialogY = screenY - dialogHeight / 2; // Center vertically on annotation
+    
+    // Check if dialog would go off screen on the right
+    if (dialogX + dialogWidth > window.innerWidth - 20) {
+      dialogX = screenX - dialogWidth - 20; // Position to left instead
     }
-  }, [selectedAnnotationId, currentAnnotations, handleAnnotationsChange]);
+    
+    // Ensure dialog stays within vertical bounds
+    if (dialogY < 20) {
+      dialogY = 20;
+    } else if (dialogY + dialogHeight > window.innerHeight - 20) {
+      dialogY = window.innerHeight - dialogHeight - 20;
+    }
+
+    setLabelDialogAnnotation(annotation);
+    setLabelDialogPosition({ x: dialogX, y: dialogY });
+  }, []);
+
+  // Handle label dialog save
+  const handleLabelDialogSave = useCallback((label: string) => {
+    if (!labelDialogAnnotation || currentImageIndex < 0) return;
+
+    const filename = images[currentImageIndex].name;
+    const updatedData = annotationData.map((imageData: ImageAnnotation) => {
+      if (imageData.filename === filename) {
+        return {
+          ...imageData,
+          annotations: imageData.annotations.map((annotation: Annotation) =>
+            annotation.id === labelDialogAnnotation.id
+              ? { ...annotation, label }
+              : annotation
+          )
+        };
+      }
+      return imageData;
+    });
+
+    setAnnotationData(updatedData);
+    setLabelDialogAnnotation(null);
+    setLabelDialogPosition(null);
+  }, [labelDialogAnnotation, currentImageIndex, images, annotationData]);
+
+  // Handle label dialog cancel
+  const handleLabelDialogCancel = useCallback(() => {
+    setLabelDialogAnnotation(null);
+    setLabelDialogPosition(null);
+  }, []);
 
   // Handle zoom actions
   const handleZoomAction = useCallback((action: ZoomMode) => {
@@ -219,8 +274,6 @@ export default function Home() {
         <AnnotationToolbar
           mode={mode}
           onModeChange={setMode}
-          selectedAnnotation={selectedAnnotation}
-          onAnnotationLabelChange={handleAnnotationLabelChange}
           onExport={handleExport}
           onImport={handleImport}
           annotationCount={totalAnnotations}
@@ -264,6 +317,7 @@ export default function Home() {
                     onViewStateChange={setViewState}
                     onZoomAction={handleZoomAction}
                     resizeTrigger={resizeTrigger}
+                    onAnnotationDoubleClick={handleAnnotationDoubleClick}
                   />
                 </div>
               </div>
@@ -281,6 +335,14 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
+      {/* Label Dialog */}
+      <LabelDialog
+        annotation={labelDialogAnnotation}
+        onSave={handleLabelDialogSave}
+        onCancel={handleLabelDialogCancel}
+        position={labelDialogPosition}
+      />
     </div>
   );
 }

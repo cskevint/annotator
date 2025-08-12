@@ -14,10 +14,12 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
 - **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
-- **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
+- **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 - **Center-Fixed Zoom Controls**: Zoom in/out while maintaining canvas center point, fit-to-screen, actual size, and focus-annotation
 - **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
-- **Zoom-Responsive Labels**: Annotation labels are centered within circles and scale with zoom for optimal readability
+- **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
+- **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
+- **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
@@ -89,14 +91,14 @@ npm run dev
      - **Delete**: Click the red X button in the top-right corner of the selected annotation
      - **Move**: Click and drag anywhere inside the selected annotation to move it
      - **Resize**: Click and drag the red resize handle (circle on the right edge) to adjust size
-   - **Label**: Add descriptive labels to annotations using the label input that appears when an annotation is selected
+     - **Edit Label**: Double-click anywhere inside the annotation to open the label editing dialog with smart positioning
 
 5. **Navigate & Zoom**:
    - **Auto-Fit**: Images automatically fit to screen when first selected for optimal viewing
    - **Zoom In/Out**: Use zoom controls to get closer or farther from the image
    - **Fit to Screen**: Automatically fit the entire image in the viewport
    - **Actual Size**: View image at 100% (1:1 pixel ratio)
-   - **Focus Annotation**: Intelligently zoom to optimal viewing level for the selected annotation
+   - **Focus Annotation**: Intelligently zoom and position to show the entire selected annotation with comfortable padding
    - **Spacebar Panning**: Hold spacebar + drag for temporary panning in any mode (works like Photoshop)
    - **Smart Resize**: Canvas automatically resizes to use full available space on zoom operations
 

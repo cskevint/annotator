@@ -22,7 +22,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 5. **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
 6. **Smart Workflow**: Automatically switches to Select mode after drawing and selects newly created annotations
 7. **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
-8. **Focus Zoom**: Intelligent zoom to optimal viewing level for selected annotations
+8. **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 9. **Comprehensive Zoom Controls**: Center-fixed zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
 10. **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom operations and spacebar panning
 11. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
@@ -32,11 +32,12 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with refined button outlines for optimal visibility
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
-18. **Zoom-Responsive Labels**: Annotation labels are centered within circles and scale with zoom for optimal readability
-19. **Labeling System**: Add custom labels to each annotation with real-time editing
-20. **Data Export/Import**: Export annotations as JSON and import previous sessions
-21. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
-22. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+18. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
+19. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
+20. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
+21. **Data Export/Import**: Export annotations as JSON and import previous sessions
+22. **Full Viewport Layout**: Horizontal toolbar with 8-column grid layout for maximum workspace
+23. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Horizontal Toolbar**: All annotation and navigation controls in a single row above the workspace

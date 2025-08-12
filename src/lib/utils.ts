@@ -126,14 +126,28 @@ export function calculateAnnotationFocusView(
   canvasWidth: number,
   canvasHeight: number
 ): { zoom: number; panX: number; panY: number } {
-  // Calculate zoom level to show annotation with comfortable padding
-  // We want the annotation to take up about 20-30% of the smaller canvas dimension
-  const targetSize = Math.min(canvasWidth, canvasHeight) * 0.25;
-  const annotationSize = annotation.radius * 2; // diameter
-  let optimalZoom = targetSize / annotationSize;
+  // Calculate zoom level to ensure the entire annotation fits within the canvas with padding
+  const padding = 50; // 50px padding on each side
+  const availableWidth = canvasWidth - (padding * 2);
+  const availableHeight = canvasHeight - (padding * 2);
   
-  // Clamp zoom to reasonable bounds (minimum 1x for readability, maximum 8x for detail)
-  optimalZoom = Math.max(1, Math.min(8, optimalZoom));
+  // The annotation needs to fit within both width and height constraints
+  const annotationDiameter = annotation.radius * 2;
+  
+  // Calculate maximum zoom that ensures the annotation fits in both dimensions
+  const maxZoomForWidth = availableWidth / annotationDiameter;
+  const maxZoomForHeight = availableHeight / annotationDiameter;
+  let optimalZoom = Math.min(maxZoomForWidth, maxZoomForHeight);
+  
+  // Also ensure it's not too small - annotation should be at least 20% of the smaller dimension
+  const minSize = Math.min(canvasWidth, canvasHeight) * 0.2;
+  const minZoom = minSize / annotationDiameter;
+  
+  // Use the larger of the two zoom values to ensure both constraints are met
+  optimalZoom = Math.max(minZoom, optimalZoom);
+  
+  // Clamp zoom to reasonable bounds (minimum 0.5x, maximum 8x)
+  optimalZoom = Math.max(0.5, Math.min(8, optimalZoom));
   
   // Calculate pan to center the annotation
   const scaledAnnotationX = annotation.x * optimalZoom;
