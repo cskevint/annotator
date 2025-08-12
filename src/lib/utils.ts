@@ -46,17 +46,23 @@ export function isPointOnResizeHandle(
   circleX: number,
   circleY: number,
   radius: number,
-  zoom: number = 1,
-  tolerance: number = 14
+  zoom: number = 1
 ): boolean {
   const handleX = circleX + radius;
   const handleY = circleY;
-  // Inverse scaling: larger tolerance when zoomed out
-  const scaleFactor = 1 / Math.max(0.3, zoom);
-  const minTolerance = 10;
-  const maxTolerance = 50;
-  const scaledTolerance = Math.max(minTolerance, Math.min(maxTolerance, tolerance * scaleFactor));
-  return distance(pointX, pointY, handleX, handleY) <= scaledTolerance;
+  
+  // Calculate the visual resize button radius with extra padding for better click target
+  const baseResizeRadius = 14;
+  const resizeScaleFactor = 1 / Math.max(0.3, zoom);
+  const minRadius = 10;
+  const maxRadius = 45;
+  const visualResizeRadius = Math.max(minRadius, Math.min(maxRadius, baseResizeRadius * resizeScaleFactor));
+  
+  // Add extra padding for better click target (25% larger than visual)
+  const clickTargetRadius = visualResizeRadius * 1.25;
+  
+  // Check if point is within the expanded click target area
+  return distance(pointX, pointY, handleX, handleY) <= clickTargetRadius;
 }
 
 // Check if point is on delete button

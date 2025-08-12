@@ -32,12 +32,13 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with refined button outlines for optimal visibility
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
-18. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
-19. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
-20. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
-21. **Data Export/Import**: Export annotations as JSON and import previous sessions
-22. **Full Viewport Layout**: Horizontal toolbar with streamlined controls for maximum workspace
-23. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+18. **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
+19. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
+20. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
+21. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
+22. **Data Export/Import**: Export annotations as JSON and import previous sessions
+23. **Full Viewport Layout**: Horizontal toolbar with streamlined controls for maximum workspace
+24. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Vertical Sidebar Layout**: Data management controls above image management (contextual interaction - no mode buttons)
@@ -58,7 +59,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 2. **Selection Context**: Click on any annotation to select it, then:
    - Click red X button in top-right corner to delete selected annotation (scales inversely with zoom for visibility)
    - Click and drag annotation body to move it
-   - Click and drag red resize handle on right edge to resize annotation (scales inversely with zoom for visibility)
+   - Click and drag red resize handle on right edge to resize annotation (scales inversely with zoom for visibility, with enhanced click target covering entire visual circle plus 25% padding)
    - All annotation manipulation (delete, move, resize) happens directly on annotations, not via separate toolbar buttons
 3. **Smart Cursor Feedback**: Pointer cursor when hovering over annotations, crosshair for drawing areas, specific cursors for resize/move actions
 

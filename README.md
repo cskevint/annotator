@@ -12,6 +12,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines)
 - **Contextual Interaction System**: Intelligent operation - click outside annotations to draw, click on annotations to select (no mode switching needed)
 - **Enhanced Selection**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
+- **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
 - **Smart Workflow**: Automatically selects newly created annotations for immediate editing
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 - **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
@@ -237,24 +238,7 @@ For questions or issues, please create an issue in the [GitHub repository](https
 
 ## Roadmap
 
-### ✅ Recently Completed
-- [x] **Independent Scrolling Interface** - Image list container scrolls separately from main application
-- [x] **PDF Upload Support** - Upload PDF files with automatic conversion to 300 DPI images per page
-- [x] **Local PDF Worker Configuration** - Reliable PDF processing without external CDN dependencies
-- [x] **Full canvas space utilization** - Canvas uses all available width and height for maximum workspace
-- [x] **Auto-resize triggers** - Canvas automatically resizes on image selection and zoom operations
-- [x] **Zoom and pan controls** - Full zoom in/out, fit-to-screen, actual size with percentage display
-- [x] **Dynamic canvas resizing** - Smart responsive canvas with optimal space usage
-- [x] **Contextual interaction system** - Intelligent behavior based on user actions (no mode switching needed)
-- [x] **Performance optimization** - Debounced resize events and smooth rendering
-- [x] **Production build optimization** - Zero warnings, clean TypeScript, optimized bundle
-
 ### 🚧 Future Enhancements
 - [ ] **Undo/Redo functionality** - Step-by-step annotation history
-- [ ] **Keyboard shortcuts** - Hotkeys for common actions and navigation
-- [ ] **Batch annotation operations** - Multi-select and bulk editing
-- [ ] **Additional annotation shapes** - Rectangles, polygons, freehand drawing
-- [ ] **Export formats** - COCO, YOLO, Pascal VOC compatibility
 - [ ] **Advanced zoom features** - Mouse wheel zoom, zoom to selection
 - [ ] **Annotation templates** - Predefined label sets and quick tools
-- [ ] **Collaborative editing** - Real-time multi-user annotation sessions

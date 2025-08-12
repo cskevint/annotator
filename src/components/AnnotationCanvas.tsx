@@ -73,10 +73,10 @@ export default function AnnotationCanvas({
             // Draw resize handle for selected annotation
       if (isSelected) {
         // Inverse scaling: larger when zoomed out, smaller when zoomed in
-        const baseResizeRadius = 12;
+        const baseResizeRadius = 14;
         const resizeScaleFactor = 1 / Math.max(0.3, viewState.zoom); // Prevent division by very small numbers
-        const minRadius = 8;
-        const maxRadius = 40;
+        const minRadius = 10;
+        const maxRadius = 45;
         const resizeRadius = Math.max(minRadius, Math.min(maxRadius, baseResizeRadius * resizeScaleFactor));
         
         ctx.beginPath();
