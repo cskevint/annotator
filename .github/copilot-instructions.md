@@ -1,6 +1,12 @@
 # Copilot Instructions
 
-<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
+<!-- 12. *17. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+18. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected) and semi-transparent black fill (5% opacity) for enhanced contrast
+19. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels with optimized click targets
+20. **Enhanced Click Targets**: Resize and delete button click detection uses generous padding (20% larger than visual) with proper priority ordering for improved usability at all zoom levels
+21. **Double-Click Label Editing**: Streamlined label dialog with smart positioning - dropdown auto-saves on selection, custom text entry with checkmark button
+22. **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options that auto-save on selection, plus custom text entry with checkmark save buttonum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+13. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operationse this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
 This is a Next.js 15 TypeScript project for image annotation with the following key features:
 
@@ -25,12 +31,13 @@ This is a Next.js 15 TypeScript project for image annotation with the following 
 8. **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 9. **Comprehensive Zoom Controls**: Center-fixed zoom in/out, fit-to-screen, actual size, and focus-annotation with percentage display
 10. **Mouse Wheel Zoom**: Mouse wheel support for intuitive zoom in/out with center-fixed behavior (trackpad gestures disabled to prevent accidental zooming)
-11. **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom operations and spacebar panning
-12. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
-12. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
-13. **Independent Scrolling Interface**: Image list container scrolls separately from main application
-14. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
-15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
+11. **Middle Mouse Button Panning**: Click and drag with middle mouse button (wheel click) for intuitive panning without keyboard shortcuts
+12. **Global Keyboard Shortcuts**: Cmd/Ctrl +/- for zoom operations and spacebar panning
+13. **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
+14. **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
+15. **Independent Scrolling Interface**: Image list container scrolls separately from main application
+16. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
+17. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected) and semi-transparent black fill (5% opacity) for enhanced contrast
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels with optimized click targets
 18. **Enhanced Click Targets**: Resize and delete button click detection uses generous padding (20% larger than visual) with proper priority ordering for improved usability at all zoom levels

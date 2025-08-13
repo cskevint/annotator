@@ -36,6 +36,7 @@ A modern, production-ready web application built with Next.js 15 for annotating 
 - **Cmd/Ctrl + Plus**: Zoom in (1.5x steps) while keeping canvas center fixed
 - **Cmd/Ctrl + Minus**: Zoom out (1.5x steps) while keeping canvas center fixed
 - **Mouse Wheel**: Scroll up to zoom in, scroll down to zoom out (center-fixed, mouse wheel only - trackpad disabled)
+- **Middle Mouse Button**: Click and drag with middle mouse button (wheel click) for intuitive panning
 - **Spacebar + Drag**: Temporary panning in any mode (works like Photoshop/design tools)
 
 ## Advanced Features

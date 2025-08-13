@@ -159,6 +159,12 @@ export default function WelcomeDialog({ isOpen, onClose }: WelcomeDialogProps) {
                 </kbd>
               </div>
               <div className="flex items-center justify-between bg-gray-50 rounded px-3 py-2">
+                <span className="text-sm text-gray-700">Middle Mouse Pan</span>
+                <kbd className="px-2 py-1 bg-gray-200 rounded text-xs font-mono">
+                  Wheel Click + Drag
+                </kbd>
+              </div>
+              <div className="flex items-center justify-between bg-gray-50 rounded px-3 py-2">
                 <span className="text-sm text-gray-700">Mouse Wheel</span>
                 <span className="text-xs text-gray-500">Zoom In/Out</span>
               </div>

@@ -476,12 +476,23 @@ export default function AnnotationCanvas({
     const pos = getMousePos(e);
     const selectedAnnotation = annotations.find(a => a.id === selectedAnnotationId);
 
-    // Handle spacebar panning for any mode
-    if (isSpacePressed) {
+    // Handle middle mouse button (wheel click) for panning
+    if (e.button === 1) {
+      e.preventDefault(); // Prevent default middle-click behavior (like opening links in new tabs)
       setIsPanning(true);
       setPanStart({ x: pos.canvasX, y: pos.canvasY });
       return;
     }
+
+    // Handle spacebar panning for any mode (left click only)
+    if (isSpacePressed && e.button === 0) {
+      setIsPanning(true);
+      setPanStart({ x: pos.canvasX, y: pos.canvasY });
+      return;
+    }
+
+    // Only process left mouse button clicks for annotation interactions
+    if (e.button !== 0) return;
 
     // Check if clicking on delete button of selected annotation
     if (selectedAnnotation && isPointOnDeleteButton(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
@@ -730,6 +741,10 @@ export default function AnnotationCanvas({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onWheel={handleWheel}
+        onContextMenu={(e) => {
+          // Prevent context menu on middle mouse button and right click
+          e.preventDefault();
+        }}
         onMouseLeave={() => {
           setCanvasState({
             ...canvasState,
