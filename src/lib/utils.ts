@@ -51,18 +51,15 @@ export function isPointOnResizeHandle(
   const handleX = circleX + radius;
   const handleY = circleY;
   
-  // Calculate the visual resize button radius with extra padding for better click target
+  // The resize button is drawn with inverse scaling to maintain consistent visual size
+  // Use the base size with some padding for better usability
   const baseResizeRadius = 14;
-  const resizeScaleFactor = 1 / Math.max(0.3, zoom);
-  const minRadius = 10;
-  const maxRadius = 45;
-  const visualResizeRadius = Math.max(minRadius, Math.min(maxRadius, baseResizeRadius * resizeScaleFactor));
+  const visualRadius = baseResizeRadius / zoom; // Radius in image coordinate space
   
-  // Add extra padding for better click target (25% larger than visual)
-  const clickTargetRadius = visualResizeRadius * 1.25;
+  // Add 20% padding for better click target
+  const clickRadius = visualRadius * 1.2;
   
-  // Check if point is within the expanded click target area
-  return distance(pointX, pointY, handleX, handleY) <= clickTargetRadius;
+  return distance(pointX, pointY, handleX, handleY) <= clickRadius;
 }
 
 // Check if point is on delete button
@@ -72,17 +69,20 @@ export function isPointOnDeleteButton(
   circleX: number,
   circleY: number,
   radius: number,
-  zoom: number = 1,
-  tolerance: number = 16
+  zoom: number = 1
 ): boolean {
   const deleteX = circleX + radius * 0.7;
   const deleteY = circleY - radius * 0.7;
-  // Inverse scaling: larger tolerance when zoomed out
-  const scaleFactor = 1 / Math.max(0.3, zoom);
-  const minTolerance = 12;
-  const maxTolerance = 55;
-  const scaledTolerance = Math.max(minTolerance, Math.min(maxTolerance, tolerance * scaleFactor));
-  return distance(pointX, pointY, deleteX, deleteY) <= scaledTolerance;
+  
+  // The delete button is drawn with inverse scaling to maintain consistent visual size
+  // Use the base size with some padding for better usability
+  const baseDeleteRadius = 14;
+  const visualRadius = baseDeleteRadius / zoom; // Radius in image coordinate space
+  
+  // Add 20% padding for better click target
+  const clickRadius = visualRadius * 1.2;
+  
+  return distance(pointX, pointY, deleteX, deleteY) <= clickRadius;
 }
 
 // Format file size for display

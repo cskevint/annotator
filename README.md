@@ -12,7 +12,7 @@ A modern, production-ready web application built with Next.js 15 for annotating 
 - **Interactive Annotation**: Click and drag to create circular annotations with thick, high-visibility styling (8-10px lines), semi-transparent black fill (5% opacity), and color-coded feedback (green unselected, blue selected)
 - **Contextual Interaction System**: Intelligent operation - click outside annotations to draw, click on annotations to select (no mode switching needed)
 - **Enhanced Selection**: Click to select, drag to move, resize via handles, and delete with X button (controls scale with zoom for visibility)
-- **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
+- **Enhanced Click Targets**: Resize and delete button click detection uses generous padding (20% larger than visual) with proper priority ordering for improved usability at all zoom levels
 - **Smart Workflow**: Automatically selects newly created annotations for immediate editing
 - **Auto-Selection**: First uploaded image is automatically selected when no images are loaded
 - **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding

@@ -32,8 +32,8 @@ This is a Next.js 15 TypeScript project for image annotation with the following 
 14. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected) and semi-transparent black fill (5% opacity) for enhanced contrast
-17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
-18. **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
+17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels with optimized click targets
+18. **Enhanced Click Targets**: Resize and delete button click detection uses generous padding (20% larger than visual) with proper priority ordering for improved usability at all zoom levels
 19. **Double-Click Label Editing**: Streamlined label dialog with smart positioning - dropdown auto-saves on selection, custom text entry with checkmark button
 20. **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options that auto-save on selection, plus custom text entry with checkmark save button
 21. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background

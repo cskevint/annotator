@@ -491,6 +491,13 @@ export default function AnnotationCanvas({
       return;
     }
 
+    // Check if clicking on resize handle of selected annotation (BEFORE general annotation detection)
+    if (selectedAnnotation && isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
+      setSelectAction('resize');
+      setCanvasState({ ...canvasState, isDrawing: true });
+      return;
+    }
+
     // Find clicked annotation for selection
     const clickedAnnotation = annotations.find(annotation =>
       isPointInCircle(pos.x, pos.y, annotation.x, annotation.y, annotation.radius)
@@ -520,14 +527,6 @@ export default function AnnotationCanvas({
     // CONTEXTUAL MODE LOGIC:
     // If clicking on an annotation, enter "select mode" behavior
     if (clickedAnnotation) {
-      // Check if clicking on resize handle of selected annotation
-      if (selectedAnnotation && clickedAnnotation.id === selectedAnnotation.id && 
-          isPointOnResizeHandle(pos.x, pos.y, selectedAnnotation.x, selectedAnnotation.y, selectedAnnotation.radius, viewState.zoom)) {
-        setSelectAction('resize');
-        setCanvasState({ ...canvasState, isDrawing: true });
-        return;
-      }
-
       // Check if clicking inside selected annotation for moving
       if (selectedAnnotation && clickedAnnotation.id === selectedAnnotation.id) {
         setSelectAction('move');
