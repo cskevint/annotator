@@ -2,10 +2,10 @@
 
 <!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
 
-This is a Next.js 14 TypeScript project for image annotation with the following key features:
+This is a Next.js 15 TypeScript project for image annotation with the following key features:
 
 ## Project Context
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: Radix UI primitives (Dialog, Select, Label, Separator, Toast)
@@ -42,7 +42,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 23. **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
 24. **Resizable Sidebar**: Drag divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
 25. **Visual Thumbnails**: Sidebar displays actual image thumbnails (48px) instead of generic icons with memory-efficient caching
-26. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+26. **Welcome Dialog**: Interactive onboarding dialog with feature overview, keyboard shortcuts, and user preference storage
+27. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Fixed Viewport Design**: Application uses full viewport height (`h-screen overflow-hidden`) with no application-level scrollbars
@@ -85,7 +86,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 
 ## Code Patterns
 - Use TypeScript with strict typing and proper interfaces
-- Follow Next.js 14 App Router conventions
+- Follow Next.js 15 App Router conventions
 - Implement responsive design with Tailwind CSS and CSS Grid
 - Use Radix UI components for accessible UI elements
 - Canvas-based drawing for precise annotation control with zoom/pan transformations
@@ -104,7 +105,8 @@ src/
 │   ├── AnnotationCanvas.tsx  # Canvas-based annotation interface
 │   ├── ImageUploader.tsx     # Compact image upload and management
 │   ├── LabelDialog.tsx       # Double-click label editing dialog
-│   └── ResizableDivider.tsx  # Invisible divider for sidebar width adjustment
+│   ├── ResizableDivider.tsx  # Invisible divider for sidebar width adjustment
+│   └── WelcomeDialog.tsx     # Interactive onboarding dialog
 ├── lib/
 │   └── utils.ts             # Utility functions and helpers
 └── types/

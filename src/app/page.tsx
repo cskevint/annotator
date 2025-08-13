@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useCallback, useMemo, useRef } from 'react';
-import { Upload, Download, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'lucide-react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { Upload, Download, ZoomIn, ZoomOut, Maximize, RotateCw, Target, HelpCircle } from 'lucide-react';
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import LabelDialog from '@/components/LabelDialog';
 import ResizableDivider from '@/components/ResizableDivider';
+import WelcomeDialog from '@/components/WelcomeDialog';
 import { Annotation, ImageAnnotation, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
 import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
 
@@ -25,7 +26,17 @@ export default function Home() {
   const [labelDialogPosition, setLabelDialogPosition] = useState<{ x: number; y: number } | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(280); // Initial sidebar width in pixels
   const [isResizing, setIsResizing] = useState<boolean>(false);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState<boolean>(false);
   const importInputRef = useRef<HTMLInputElement>(null);
+
+  // Check localStorage for welcome dialog preference on component mount
+  useEffect(() => {
+    const showOnStartup = localStorage.getItem('annotator-show-on-startup');
+    // Default to true if no preference is set, false if explicitly set to "false"
+    if (showOnStartup === null || showOnStartup === 'true') {
+      setShowWelcomeDialog(true);
+    }
+  }, []);
 
   // Get current image URL
   const currentImageUrl = useMemo(() => {
@@ -293,6 +304,16 @@ export default function Home() {
     setIsResizing(false);
   }, []);
 
+  // Handle welcome dialog close
+  const handleWelcomeDialogClose = useCallback(() => {
+    setShowWelcomeDialog(false);
+  }, []);
+
+  // Handle help button click
+  const handleShowHelp = useCallback(() => {
+    setShowWelcomeDialog(true);
+  }, []);
+
   return (
     <div className="h-screen overflow-hidden bg-gray-50">
       <div className="h-full px-4 py-4">
@@ -306,6 +327,14 @@ export default function Home() {
             <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 space-y-3 flex-shrink-0">
               {/* Import/Export Controls */}
               <div className="flex flex-col space-y-2">
+                <button
+                  onClick={handleShowHelp}
+                  className="flex items-center justify-center space-x-2 px-3 py-2 bg-orange-50 text-orange-700 border border-orange-200 rounded-md text-sm font-medium hover:bg-orange-100 transition-colors"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  <span>Help</span>
+                </button>
+                
                 <button
                   onClick={() => importInputRef.current?.click()}
                   className="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
@@ -463,6 +492,12 @@ export default function Home() {
         onSave={handleLabelDialogSave}
         onCancel={handleLabelDialogCancel}
         position={labelDialogPosition}
+      />
+
+      {/* Welcome Dialog */}
+      <WelcomeDialog
+        isOpen={showWelcomeDialog}
+        onClose={handleWelcomeDialogClose}
       />
     </div>
   );

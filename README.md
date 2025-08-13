@@ -1,6 +1,6 @@
 # Image Annotation Tool
 
-A modern, production-ready web application built with Next.js 14 for annotating images with circular annotations. Create precise annotations with labels and export your work as JSON data.
+A modern, production-ready web application built with Next.js 15 for annotating images with circular annotations. Create precise annotations with labels and export your work as JSON data.
 
 🔗 **Live Demo:** https://annotator-kohl.vercel.app/  
 📚 **Repository:** https://github.com/cskevint/annotator
@@ -29,6 +29,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 - **Resizable Sidebar**: Drag invisible divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
 - **Visual Thumbnails**: Sidebar displays actual image thumbnails (48px) with memory-efficient caching for easy image identification
+- **Welcome Dialog**: Interactive onboarding experience with feature overview, keyboard shortcuts guide, and user preference storage for showing on startup
 
 ## Keyboard Shortcuts
 
@@ -155,7 +156,7 @@ Exported JSON follows this structure:
 
 ## Technical Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: Radix UI primitives
@@ -173,8 +174,10 @@ src/
 │   └── page.tsx
 ├── components/
 │   ├── AnnotationCanvas.tsx     # Canvas-based annotation interface
-│   ├── AnnotationToolbar.tsx    # Horizontal toolbar with all controls
-│   └── ImageUploader.tsx        # Image upload and management
+│   ├── ImageUploader.tsx        # Compact image upload and management
+│   ├── LabelDialog.tsx          # Double-click label editing dialog
+│   ├── ResizableDivider.tsx     # Invisible divider for sidebar width adjustment
+│   └── WelcomeDialog.tsx        # Interactive onboarding dialog
 ├── lib/
 │   └── utils.ts                # Utility functions
 └── types/
@@ -199,8 +202,9 @@ npm run lint         # Run ESLint
   - Maximum space utilization with automatic resize triggers
   - Performance-optimized with requestAnimationFrame and debounced resize events
   - Floating zoom controls overlay in top-right corner
-- **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout
-- **LabelDialog**: Context-sensitive label editing dialog with smart positioning
+- **ImageUploader**: Manages file upload, image selection, and file display in a compact single-column layout with visual thumbnails
+- **LabelDialog**: Context-sensitive label editing dialog with smart positioning and predefined label support  
+- **WelcomeDialog**: Interactive onboarding dialog with feature overview, keyboard shortcuts, and user preferences
 
 ### Contextual Interaction System
 
