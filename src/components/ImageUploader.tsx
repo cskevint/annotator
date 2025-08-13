@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
-import { Upload, X, Image as ImageIcon, FileText, Loader2 } from 'lucide-react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { Upload, X, Loader2 } from 'lucide-react';
 import { formatFileSize, convertPdfToImages } from '@/lib/utils';
 
 interface ImageUploaderProps {
@@ -18,6 +18,33 @@ export default function ImageUploader({
   onImageSelect
 }: ImageUploaderProps) {
   const [isProcessingPdf, setIsProcessingPdf] = useState(false);
+  const thumbnailUrlsRef = useRef<Map<string, string>>(new Map());
+
+  // Cleanup object URLs when component unmounts or images change
+  useEffect(() => {
+    const currentUrls = thumbnailUrlsRef.current;
+    
+    return () => {
+      // Cleanup all object URLs
+      currentUrls.forEach(url => {
+        URL.revokeObjectURL(url);
+      });
+      currentUrls.clear();
+    };
+  }, []);
+
+  // Create or get cached thumbnail URL
+    const getThumbnailUrl = useCallback((file: File) => {
+    const key = `${file.name}-${file.size}`;
+    
+    if (thumbnailUrlsRef.current.has(key)) {
+      return thumbnailUrlsRef.current.get(key)!;
+    }
+    
+    const thumbnailUrl = URL.createObjectURL(file);
+    thumbnailUrlsRef.current.set(key, thumbnailUrl);
+    return thumbnailUrl;
+  }, []);
 
   const processFiles = useCallback(async (files: File[]) => {
     const imageFiles: File[] = [];
@@ -70,7 +97,19 @@ export default function ImageUploader({
   }, [processFiles]);
 
   const removeImage = useCallback((index: number) => {
+    const removedImage = images[index];
     const newImages = images.filter((_, i) => i !== index);
+    
+    // Clean up thumbnail URL for removed image
+    if (removedImage) {
+      const key = `${removedImage.name}-${removedImage.size}`;
+      const thumbnailUrl = thumbnailUrlsRef.current.get(key);
+      if (thumbnailUrl) {
+        URL.revokeObjectURL(thumbnailUrl);
+        thumbnailUrlsRef.current.delete(key);
+      }
+    }
+    
     onImagesChange(newImages);
     
     // Adjust current image index if necessary
@@ -151,13 +190,17 @@ export default function ImageUploader({
                 }`}
                 onClick={() => onImageSelect(index)}
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
-                    {image.name.includes('_page_') ? (
-                      <FileText className="h-6 w-6 text-blue-500" />
-                    ) : (
-                      <ImageIcon className="h-6 w-6 text-gray-400" />
-                    )}
+                    {/* Thumbnail image */}
+                    <div className="w-12 h-12 rounded border border-gray-200 overflow-hidden bg-gray-50">
+                      <img
+                        src={getThumbnailUrl(image)}
+                        alt={image.name}
+                        className="w-full h-full object-cover"
+                        style={{ maxWidth: '48px', maxHeight: '48px' }}
+                      />
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-gray-900 truncate">

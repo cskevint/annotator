@@ -28,6 +28,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
 - **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
 - **Resizable Sidebar**: Drag invisible divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
+- **Visual Thumbnails**: Sidebar displays actual image thumbnails (48px) with memory-efficient caching for easy image identification
 
 ## Keyboard Shortcuts
 
@@ -45,7 +46,8 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Export/Import**: Save and load annotation data as JSON files
 - **Real-time Feedback**: Live zoom percentage display and responsive UI updates
 - **Independent Scrolling**: Image list scrolls separately from the main workspace with explicit height constraints
-- **Memory Efficient**: Optimized image handling for large PDFs and multiple images
+- **Memory Efficient**: Optimized image handling for large PDFs and multiple images with thumbnail caching and automatic cleanup
+- **Visual Thumbnails**: Image list displays actual thumbnail previews instead of generic icons for improved user experience
 - **Labeling System**: Add custom labels to each annotation with real-time editing
 - **Data Export/Import**: Export annotations as JSON and import previous sessions
 - **Responsive Design**: Optimized for desktop and tablet devices with dynamic window resizing

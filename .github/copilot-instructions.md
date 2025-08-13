@@ -41,7 +41,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 22. **Data Export/Import**: Export annotations as JSON and import previous sessions
 23. **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
 24. **Resizable Sidebar**: Drag divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
-25. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+25. **Visual Thumbnails**: Sidebar displays actual image thumbnails (48px) instead of generic icons with memory-efficient caching
+26. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Fixed Viewport Design**: Application uses full viewport height (`h-screen overflow-hidden`) with no application-level scrollbars
@@ -49,7 +50,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 - **Compact Sidebar**: Data management (import/export/annotation count) and image upload in vertical stack (1 column on large screens)
   - **Data Management Section**: Fixed height container (`flex-shrink-0`) with import/export controls always visible
   - **Image Upload Area**: Fixed height container with drag-and-drop functionality
-  - **Image List Container**: Independent scrolling area with explicit height constraints for smooth scrolling behavior
+  - **Image List Container**: Independent scrolling area with thumbnail previews, explicit height constraints for smooth scrolling behavior
+  - **Visual Thumbnails**: 48px image previews with memory-efficient object URL caching and automatic cleanup
   - **Resizable Width**: Drag invisible divider to adjust sidebar width between 280px - 600px with global mouse tracking and escape key support
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
   - Maximum space utilization using all available width and height with `h-full flex flex-col min-h-0` constraints
