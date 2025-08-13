@@ -27,6 +27,7 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Maximum Canvas Utilization**: Canvas automatically uses all available width and height for optimal workspace
 - **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
 - **Smart Canvas Resizing**: Dynamic canvas with automatic resize triggers on image selection and zoom operations
+- **Resizable Sidebar**: Drag invisible divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
 
 ## Keyboard Shortcuts
 
@@ -119,13 +120,14 @@ npm run dev
   - **Data Management**: Import/export buttons and total annotation count at top (always visible)
   - **Image Upload**: Upload area with drag-and-drop functionality (always visible)  
   - **Independent Scrolling**: Image list scrolls separately with explicit height constraints and overflow handling
+  - **Resizable Width**: Drag invisible divider to adjust sidebar width (280px - 600px) with escape key support and real-time canvas adaptation
   - **PDF Conversion**: Visual feedback during PDF-to-image conversion process
 - **Dynamic Canvas Area**: Main annotation workspace (87.5% width) with maximum space utilization
   - **Floating Zoom Controls**: Top-right corner overlay with all zoom functions and percentage display
   - **Contextual Interaction**: Click outside annotations to draw, click on annotations to select (seamless contextual workflow)
   - **Full Space Usage**: Canvas automatically uses all available width and height with `h-full flex flex-col min-h-0` constraints
-  - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations with debounced resize events
-  - **Real-time Resize**: Canvas adjusts on window resize with optimal performance using `ResizeObserver`
+  - **Smart Resizing**: Automatic resize triggers on image selection and zoom operations with debounced resize events and real-time sidebar adaptation
+  - **Real-time Resize**: Canvas adjusts on window resize with optimal performance using `ResizeObserver` and key-based re-rendering for sidebar changes
 - **Fixed Viewport Design**: Uses full browser viewport height (`h-screen overflow-hidden`) for maximum workspace efficiency
 
 ### Data Format

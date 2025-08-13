@@ -40,7 +40,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 22. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 22. **Data Export/Import**: Export annotations as JSON and import previous sessions
 23. **Fixed Viewport Layout**: No application scrollbars with independent scrolling containers for optimal UX
-24. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
+24. **Resizable Sidebar**: Drag divider to adjust sidebar width (280px - 600px) with robust mouse tracking and real-time canvas resizing
+25. **Performance Optimized**: Debounced resize events, requestAnimationFrame rendering, fast PDF loading, production-ready build
 
 ## UI Architecture
 - **Fixed Viewport Design**: Application uses full viewport height (`h-screen overflow-hidden`) with no application-level scrollbars
@@ -49,6 +50,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
   - **Data Management Section**: Fixed height container (`flex-shrink-0`) with import/export controls always visible
   - **Image Upload Area**: Fixed height container with drag-and-drop functionality
   - **Image List Container**: Independent scrolling area with explicit height constraints for smooth scrolling behavior
+  - **Resizable Width**: Drag invisible divider to adjust sidebar width between 280px - 600px with global mouse tracking and escape key support
 - **Dynamic Canvas Area**: Main annotation workspace (7 columns on large screens)
   - Maximum space utilization using all available width and height with `h-full flex flex-col min-h-0` constraints
   - Floating zoom controls in top-right corner of canvas with conditional focus button state
@@ -56,6 +58,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
   - Automatic resize triggers on image selection and zoom operations with `resizeTrigger` increments
   - Real-time responsiveness to window resize with debounced `ResizeObserver` and window event handling
   - Canvas-based drawing with precise coordinate transformations for zoom/pan operations
+  - Real-time canvas resizing when sidebar width changes via key-based re-rendering and multiple resize mechanisms
 - **Canvas-Based Drawing**: HTML5 Canvas with zoom/pan transformations, precise interaction, and explicit height constraints (`style={{ height: '0', flexGrow: 1 }}`) for scrollable containers
 
 ## Contextual Interaction System
@@ -98,7 +101,8 @@ src/
 ├── components/
 │   ├── AnnotationCanvas.tsx  # Canvas-based annotation interface
 │   ├── ImageUploader.tsx     # Compact image upload and management
-│   └── LabelDialog.tsx       # Double-click label editing dialog
+│   ├── LabelDialog.tsx       # Double-click label editing dialog
+│   └── ResizableDivider.tsx  # Invisible divider for sidebar width adjustment
 ├── lib/
 │   └── utils.ts             # Utility functions and helpers
 └── types/

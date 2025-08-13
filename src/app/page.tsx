@@ -5,6 +5,7 @@ import { Upload, Download, ZoomIn, ZoomOut, Maximize, RotateCw, Target } from 'l
 import ImageUploader from '@/components/ImageUploader';
 import AnnotationCanvas from '@/components/AnnotationCanvas';
 import LabelDialog from '@/components/LabelDialog';
+import ResizableDivider from '@/components/ResizableDivider';
 import { Annotation, ImageAnnotation, AnnotationData, CanvasViewState, ZoomMode } from '@/types/annotation';
 import { calculateFitToScreenZoom, calculateCenterPan, clampZoom, calculateAnnotationFocusView } from '@/lib/utils';
 
@@ -22,6 +23,8 @@ export default function Home() {
   const [resizeTrigger, setResizeTrigger] = useState<number>(0);
   const [labelDialogAnnotation, setLabelDialogAnnotation] = useState<Annotation | null>(null);
   const [labelDialogPosition, setLabelDialogPosition] = useState<{ x: number; y: number } | null>(null);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(280); // Initial sidebar width in pixels
+  const [isResizing, setIsResizing] = useState<boolean>(false);
   const importInputRef = useRef<HTMLInputElement>(null);
 
   // Get current image URL
@@ -268,12 +271,37 @@ export default function Home() {
     return annotationData.reduce((total: number, imageData: ImageAnnotation) => total + imageData.annotations.length, 0);
   }, [annotationData]);
 
+  // Handle sidebar resize
+  const handleSidebarResize = useCallback((width: number) => {
+    setSidebarWidth(width);
+    
+    // Trigger canvas resize with multiple mechanisms for reliability
+    setResizeTrigger(prev => prev + 1);
+    
+    // Also dispatch a custom resize event
+    requestAnimationFrame(() => {
+      const event = new CustomEvent('sidebarResize', { detail: { width } });
+      window.dispatchEvent(event);
+    });
+  }, []);
+
+  const handleResizeStart = useCallback(() => {
+    setIsResizing(true);
+  }, []);
+
+  const handleResizeEnd = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
   return (
     <div className="h-screen overflow-hidden bg-gray-50">
       <div className="h-full px-4 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4 h-full" style={{ height: 'calc(100vh - 32px)' }}>
+        <div className="flex h-full" style={{ height: 'calc(100vh - 32px)' }}>
           {/* Left Panel - Data Management & Image Upload */}
-          <div className="lg:col-span-1 h-full flex flex-col">
+          <div 
+            className="h-full flex flex-col bg-transparent"
+            style={{ width: `${sidebarWidth}px`, flexShrink: 0 }}
+          >
             {/* Data Management Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 space-y-3 flex-shrink-0">
               {/* Import/Export Controls */}
@@ -282,7 +310,7 @@ export default function Home() {
                   onClick={() => importInputRef.current?.click()}
                   className="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-sm font-medium hover:bg-blue-100 transition-colors"
                 >
-                  <Upload className="h-4 w-4" />
+                  <Download className="h-4 w-4" />
                   <span>Import</span>
                 </button>
                 
@@ -299,7 +327,7 @@ export default function Home() {
                   disabled={totalAnnotations === 0}
                   className="flex items-center justify-center space-x-2 px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-md text-sm font-medium hover:bg-green-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Download className="h-4 w-4" />
+                  <Upload className="h-4 w-4" />
                   <span>Export</span>
                 </button>
               </div>
@@ -323,8 +351,22 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Center Panel - Canvas with fixed height */}
-          <div className="lg:col-span-7 h-full flex flex-col min-h-0">
+          {/* Resizable Divider */}
+          <ResizableDivider
+            onResize={handleSidebarResize}
+            isResizing={isResizing}
+            onResizeStart={handleResizeStart}
+            onResizeEnd={handleResizeEnd}
+            minWidth={280}
+            maxWidth={600}
+            containerPadding={16}
+          />
+
+          {/* Canvas Panel - Takes remaining space */}
+          <div 
+            key={`canvas-${Math.floor(sidebarWidth / 20)}`}
+            className="h-full flex flex-col min-h-0 flex-1"
+          >
             {currentImageUrl ? (
               <div className="bg-white border border-gray-200 rounded-lg p-4 flex-1 flex flex-col min-h-0">
                 <div className="mb-4 flex items-center justify-between flex-shrink-0">
