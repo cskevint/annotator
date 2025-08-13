@@ -18,8 +18,8 @@ A modern, production-ready web application built with Next.js 14 for annotating 
 - **Intelligent Focus Zoom**: Smart zoom that ensures entire annotations fit within viewport with comfortable padding
 - **Floating Zoom Controls**: Top-right corner overlay with zoom in/out, fit-to-screen, actual size, and focus-annotation (disabled when no annotation selected)
 - **Zoom-Responsive UI**: Delete and resize buttons automatically scale for optimal visibility at all zoom levels
-- **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
-- **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options plus custom text entry
+- **Double-Click Label Editing**: Streamlined label dialog with auto-save on dropdown selection and checkmark save button for custom text entry
+- **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options that auto-save on selection, plus custom text entry with checkmark save button
 - **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
 - **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 - **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing

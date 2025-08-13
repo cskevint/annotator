@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Undo } from 'lucide-react';
+import { Check, Undo } from 'lucide-react';
 import { Annotation } from '@/types/annotation';
 
 interface LabelDialogProps {
@@ -90,9 +90,17 @@ export default function LabelDialog({
     };
   }, [annotation, position, onCancel]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(label);
+  const handleCustomSave = () => {
+    if (label.trim()) {
+      onSave(label.trim());
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleCustomSave();
+    }
   };
 
   const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -103,9 +111,13 @@ export default function LabelDialog({
       setTimeout(() => {
         inputRef.current?.focus();
       }, 10);
+    } else if (selectedValue === '') {
+      // "Select a label..." option - do nothing
+      return;
     } else {
-      setUseCustomLabel(false);
+      // Predefined label selected - auto-save
       setLabel(selectedValue);
+      onSave(selectedValue);
     }
   };
 
@@ -143,21 +155,30 @@ export default function LabelDialog({
         minWidth: '200px'
       }}
     >
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-2">
-        <label className="text-sm font-medium text-gray-700">
-          Annotation Label
-        </label>
+      <div className="flex flex-col space-y-2">
         
-        {/* Case 1: No predefined labels - show simple text input */}
+        
+        {/* Case 1: No predefined labels - show simple text input with checkmark */}
         {!hasDropdown && (
-          <input
-            ref={inputRef}
-            type="text"
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            placeholder="Enter label..."
-            className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
+          <div className="flex items-center space-x-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Enter label..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="button"
+              onClick={handleCustomSave}
+              className="px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              title="Save label"
+            >
+              <Check size={16} />
+            </button>
+          </div>
         )}
         
         {/* Case 2: Has predefined labels and using dropdown */}
@@ -186,35 +207,29 @@ export default function LabelDialog({
               type="text"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="Enter custom label..."
               className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <button
               type="button"
+              onClick={handleCustomSave}
+              className="px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              title="Save label"
+            >
+              <Check size={16} />
+            </button>
+            <button
+              type="button"
               onClick={handleCustomToggle}
-              className="px-2 py-1 bg-gray-200 hover:bg-gray-300 border border-gray-300 rounded text-gray-600 hover:text-gray-800 transition-colors"
+              className="px-2 py-2 bg-gray-200 hover:bg-gray-300 border border-gray-300 rounded text-gray-600 hover:text-gray-800 transition-colors"
               title="Back to predefined labels"
             >
               <Undo size={16} />
             </button>
           </div>
         )}
-        <div className="flex space-x-2">
-          <button
-            type="submit"
-            className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-400 transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

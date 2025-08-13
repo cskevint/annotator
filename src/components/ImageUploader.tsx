@@ -194,6 +194,7 @@ export default function ImageUploader({
                   <div className="flex-shrink-0">
                     {/* Thumbnail image */}
                     <div className="w-12 h-12 rounded border border-gray-200 overflow-hidden bg-gray-50">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={getThumbnailUrl(image)}
                         alt={image.name}

@@ -34,8 +34,8 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 16. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected) and semi-transparent black fill (5% opacity) for enhanced contrast
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
 18. **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
-19. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click
-20. **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options plus custom text entry
+19. **Double-Click Label Editing**: Streamlined label dialog with smart positioning - dropdown auto-saves on selection, custom text entry with checkmark button
+20. **Predefined Label Support**: URL parameter `labels` enables dropdown with predefined options that auto-save on selection, plus custom text entry with checkmark save button
 21. **High-Contrast Label Text**: Labels with thick white stroke outline for readability against any background
 22. **Zoom-Responsive Labels**: Annotation labels scale with zoom and maintain readability at all levels
 22. **Data Export/Import**: Export annotations as JSON and import previous sessions
