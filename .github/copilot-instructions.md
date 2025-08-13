@@ -17,7 +17,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 ## Key Features
 1. **Multi-Image Upload**: Support for multiple web-compatible image formats (PNG, JPG, GIF, WebP)
 2. **PDF Support**: Upload PDF files that are automatically converted to high-resolution images (300 DPI) per page
-3. **Interactive Circle Annotations**: Click and drag to create circles with dynamic radius and thick visual styling
+3. **Interactive Circle Annotations**: Click and drag to create circles with dynamic radius, thick visual styling (8-10px lines), and semi-transparent black fill (5% opacity)
 4. **Contextual Mode System**: Intelligent mode switching - click outside annotations to draw, click on annotations to select
 5. **Enhanced Select Mode**: Click to select, drag to move, resize via handles, and delete with X button
 6. **Smart Workflow**: Automatically selects newly created annotations for immediate editing
@@ -31,7 +31,7 @@ This is a Next.js 14 TypeScript project for image annotation with the following 
 13. **Independent Scrolling Interface**: Image list container scrolls separately from main application
 14. **Spacebar Pan Navigation**: Hold spacebar + drag for temporary panning in any mode (like Photoshop)
 15. **Smart Auto-Fit**: Images automatically fit to screen when selected for optimal viewing
-16. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected)
+16. **High-Visibility Styling**: Thick annotation lines (8-10px) with color-coded visual feedback (green unselected, blue selected) and semi-transparent black fill (5% opacity) for enhanced contrast
 17. **Zoom-Responsive Controls**: Delete and resize buttons scale inversely with zoom for consistent visibility at all zoom levels
 18. **Enhanced Click Targets**: Resize button click detection uses entire visual circle with 25% padding for improved usability
 19. **Double-Click Label Editing**: Context-sensitive label dialog with smart positioning that appears on double-click

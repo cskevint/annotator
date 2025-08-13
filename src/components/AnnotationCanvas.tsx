@@ -57,12 +57,18 @@ export default function AnnotationCanvas({
     annotations.forEach((annotation) => {
       const isSelected = annotation.id === selectedAnnotationId;
       
-      // Draw circle
+      // Draw circle with fill and stroke
       ctx.beginPath();
       ctx.arc(annotation.x, annotation.y, annotation.radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = isSelected ? '#0000FF' : '#006400';
-    ctx.lineWidth = isSelected ? 10 : 8;
-    ctx.stroke();
+      
+      // Fill with semi-transparent black (5% opacity)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fill();
+      
+      // Stroke with color-coded border
+      ctx.strokeStyle = isSelected ? '#0000FF' : '#006400';
+      ctx.lineWidth = isSelected ? 10 : 8;
+      ctx.stroke();
 
       // Draw center dot
       ctx.beginPath();
@@ -175,11 +181,17 @@ export default function AnnotationCanvas({
         0,
         2 * Math.PI
       );
-  ctx.strokeStyle = '#10b981';
-  ctx.lineWidth = 8;
-  ctx.setLineDash([10, 10]);
-  ctx.stroke();
-  ctx.setLineDash([]);
+      
+      // Fill with semi-transparent black (5% opacity)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fill();
+      
+      // Stroke with dashed green line
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 8;
+      ctx.setLineDash([10, 10]);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
 
     // Restore context
@@ -590,6 +602,12 @@ export default function AnnotationCanvas({
             0,
             2 * Math.PI
           );
+          
+          // Fill with semi-transparent black (5% opacity)
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+          ctx.fill();
+          
+          // Stroke with green line
           ctx.strokeStyle = '#10b981';
           ctx.lineWidth = 8 / viewState.zoom;
           ctx.setLineDash([10 / viewState.zoom, 10 / viewState.zoom]);
